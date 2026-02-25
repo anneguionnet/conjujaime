@@ -888,8 +888,11 @@ function verifierP2Pelote(p, btn, zone) {
 
     document.querySelectorAll('#p2-pelotes .pelote-terminaison').forEach(b => b.disabled = true);
 
+    // Récupérer la couleur du groupe pour la garder sur la bonne pelote
+    const couleurBtn = btn.classList.contains('orange') ? 'orange' : 'rouge';
+
     if (p.correct) {
-        btn.classList.add('correct');
+        btn.classList.add('correct-p2');
         msg.style.color = '#2ecc71';
         msg.innerText   = '✓ Bravo !';
         document.getElementById('p2-conjugaison').innerText = `${sujet} ${radical}${terminaison}`;
@@ -901,19 +904,17 @@ function verifierP2Pelote(p, btn, zone) {
         p2EssaiCount++;
         btn.classList.add('wrong');
         if (p2EssaiCount >= 2) {
-            // Montrer la bonne réponse
             msg.style.color = '#e74c3c';
             msg.innerText   = `✗ La réponse : ${sujet} ${radical}${terminaison}`;
             document.getElementById('p2-conjugaison').innerText = `${sujet} ${radical}${terminaison}`;
             document.querySelectorAll('#p2-pelotes .pelote-terminaison').forEach(b => {
-                if (b.dataset.correct === '1') b.classList.add('correct');
+                if (b.dataset.correct === '1') b.classList.add('correct-p2');
             });
             parler(sujet + ' ' + radical + terminaison);
             setTimeout(prochain, 3000);
         } else {
             msg.style.color = '#e74c3c';
             msg.innerText   = '✗ Essaie encore !';
-            // Réactiver les pelotes non cochées
             document.querySelectorAll('#p2-pelotes .pelote-terminaison').forEach(b => {
                 if (!b.classList.contains('wrong')) b.disabled = false;
             });
