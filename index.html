@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -29,7 +30,6 @@
         <button class="btn-menu-jeu mauve" onclick="lancerJeu('conjugue')">
             🔍 L'infinitif conjugué
         </button>
-        <!-- CORRECTION 5 : phrase d'encouragement avant participe présent -->
         <p class="menu-encouragement">Deviens un expert en conjugaison en trouvant le participe présent !</p>
         <button class="btn-menu-jeu mauve" onclick="lancerJeu('participe')">
             ⭐ Le participe présent
@@ -42,8 +42,8 @@
         <button class="btn-menu-jeu vert" onclick="lancerJeu('present1')">
             🟢 1er groupe
         </button>
-        <button class="btn-menu-jeu desactive" disabled>
-            🟠 2e et 3e groupe — bientôt !
+        <button class="btn-menu-jeu orange" onclick="lancerJeu('present2')">
+            🟠 2e et 3e groupe
         </button>
         <button class="btn-menu-jeu desactive" disabled>
             🟣 Tous les groupes — bientôt !
@@ -75,7 +75,6 @@
             <small id="titre-jeu" style="color:#aaa; font-size:12px;"></small>
         </div>
 
-        <!-- CORRECTION 2 : Juju plus grand (géré dans style.css) -->
         <img src="purpleJuju.jpg" alt="Juju" class="juju-jeu" onclick="clicJuju()">
 
         <!-- Verbe affiché (jeux infinitif) -->
@@ -95,7 +94,7 @@
         <!-- Pelote indice (jeu 3) -->
         <div id="pelote-indice-zone" style="text-align:center;"></div>
 
-        <!-- Présent — mode pelotes -->
+        <!-- Présent 1er groupe — mode pelotes -->
         <div id="zone-present-pelotes" style="display:none; text-align:center;">
             <div class="infinitif-display" id="present-infinitif"></div>
             <div class="conjugaison-display" id="present-conjugaison"></div>
@@ -103,7 +102,7 @@
                  style="justify-content:center; gap:20px;"></div>
         </div>
 
-        <!-- CORRECTION 3 : Présent — mode form — sujet + input sur la même ligne -->
+        <!-- Présent 1er groupe — mode form -->
         <div id="zone-present-form" style="display:none; text-align:center;">
             <div class="infinitif-display" id="form-infinitif"></div>
             <div class="form-ligne">
@@ -114,6 +113,35 @@
             </div>
             <button class="btn-valider" id="btn-valider-form"
                     onclick="validerForm()" style="margin-top:15px;">OK</button>
+        </div>
+
+        <!-- ========================================================
+             PRESENT2 — mode pelotes (2e/3e groupe)
+             ======================================================== -->
+        <div id="zone-present2-pelotes" style="display:none; text-align:center;">
+            <div class="infinitif-display" id="p2-infinitif"></div>
+            <div class="conjugaison-display" id="p2-conjugaison"></div>
+            <div class="pelotes-zone" id="p2-pelotes"
+                 style="justify-content:center; gap:20px;"></div>
+        </div>
+
+        <!-- PRESENT2 — mode form (2e/3e groupe) -->
+        <div id="zone-present2-form" style="display:none; text-align:center;">
+            <div class="infinitif-display" id="p2-form-infinitif"></div>
+            <div class="form-ligne">
+                <span class="sujet-inline" id="p2-form-sujet"></span>
+                <input type="text" id="p2-form-input" class="input-reponse"
+                       placeholder="conjugue…"
+                       autocomplete="off" autocorrect="off" spellcheck="false">
+            </div>
+            <button class="btn-valider" id="btn-valider-p2form"
+                    onclick="validerP2Form()" style="margin-top:15px;">OK</button>
+        </div>
+
+        <!-- Encadré jaune exceptions (present2) -->
+        <div id="bulle-exceptions" class="bulle-exceptions" style="display:none;">
+            ⚠️ <strong>Retiens :</strong>
+            je/tu <b>veux</b> · je/tu <b>vaux</b> · je/tu <b>peux</b> · je/tu <b>vaincs</b> · il/elle/on <b>vainc</b>
         </div>
 
         <div class="msg-zone" id="msg-zone"></div>
@@ -154,6 +182,7 @@
     </div>
 
 </div>
+
 <script src="data.js"></script>
 <script>
 // ============================================================
@@ -162,14 +191,11 @@
 
 let sonActif = true;
 
-// CORRECTION 1 : fonction nettoyerPourVoix
-// Supprime les tirets des radicaux, normalise les apostrophes,
-// gère la liaison elles+voyelle pour éviter [elle s'arrête]
 function nettoyerPourVoix(txt) {
     if (!txt) return '';
     return txt
-        .replace(/-/g, '')           // supprime les tirets de radical
-        .replace(/'/g, "'")          // normalise apostrophes
+        .replace(/-/g, '')
+        .replace(/'/g, "'")
         .trim();
 }
 
@@ -231,7 +257,7 @@ window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices(
 
 
 // ============================================================
-// GAMES — Les 4 jeux
+// GAMES — Variables globales
 // ============================================================
 
 let jeuActuel   = '';
@@ -244,9 +270,12 @@ let dejaVus     = new Set();
 let essai       = 0;
 let dernierOrdrePelotes = [1, 2, 3];
 let clicksJuju  = 0;
+let p2EssaiCount = 0; // compteur d'erreurs pour present2
 
 const COULEURS_GR = { 1: '#a8e6cf', 2: '#ff9f7f', 3: '#b22222' };
 const SUJETS = ['je', 'tu', 'il', 'elle', 'on', 'ils', 'elles'];
+// Sujets disponibles pour present2 (on exclut 'on' car non représenté dans data 2e/3e)
+const SUJETS_P2 = ['je', 'tu', 'il', 'elle', 'ils', 'elles'];
 
 const CONFIG = {
     infinitif: {
@@ -279,9 +308,36 @@ const CONFIG = {
         7: { niv:[3,4],       mode:'form',    nb:8, opa:0.5 },
         8: { niv:[1,2,3,4],   mode:'form',    nb:8, opa:0   },
     },
+    present2: {
+        // Séries 1-3 : pelotes, niveaux 1-2, pelotes fixes (pas de shuffle)
+        1: { niv:[1,2], mode:'pelotes', nb:8, opa:1,   shuffle:false },
+        2: { niv:[1,2], mode:'pelotes', nb:8, opa:1,   shuffle:false },
+        3: { niv:[1,2], mode:'pelotes', nb:8, opa:0.5, shuffle:false },
+        // Séries 4-5 : pelotes, niveaux 3-4, pelotes mélangées
+        4: { niv:[3,4], mode:'pelotes', nb:8, opa:0.3, shuffle:true  },
+        5: { niv:[3,4], mode:'pelotes', nb:8, opa:0.1, shuffle:true  },
+        // Séries 6-8 : form, leçon qui réapparaît
+        6: { niv:[1,2], mode:'form',    nb:8, opa:0.7 },
+        7: { niv:[2,3], mode:'form',    nb:8, opa:0.4 },
+        8: { niv:[3,4], mode:'form',    nb:8, opa:0   },
+    },
 };
 
-// --- Lancer un jeu ---
+// ============================================================
+// PRÉSENT 2e/3e GROUPE — filtre sur verbesPresent (data.js)
+// ============================================================
+// Groupe 2 : radical (je/tu/il) + radicalPluriel, terminaisons std -s/-s/-t/-ent
+// Groupe 3 : idem + terminaisons custom (ex. "ds|ds|d|ent")
+// Pronominaux : radicalJe/Tu/Il/Pluriel
+
+function getVerbesP2() {
+    return verbesPresent.filter(v => v.groupe === 2 || v.groupe === 3);
+}
+
+// ============================================================
+// LANCER / NAVIGATION
+// ============================================================
+
 function lancerJeu(type) {
     jeuActuel  = type;
     serie      = 1;
@@ -298,6 +354,7 @@ function lancerJeu(type) {
         conjugue:  "L'infinitif conjugué",
         participe: 'Le participe présent',
         present1:  'Le présent — 1er groupe',
+        present2:  'Le présent — 2e et 3e groupe',
     };
     document.getElementById('titre-jeu').innerText = titres[type] || '';
     chargerSerie();
@@ -311,11 +368,15 @@ function retourMenu() {
     document.getElementById('cartouche-jeu').style.display = 'block';
 }
 
-// --- Charger une série ---
+// ============================================================
+// CHARGER UNE SÉRIE
+// ============================================================
+
 function chargerSerie() {
-    scoreSerie = 0;
-    qIndex     = 0;
-    essai      = 0;
+    scoreSerie    = 0;
+    qIndex        = 0;
+    essai         = 0;
+    p2EssaiCount  = 0;
 
     const cfg = getConfig();
 
@@ -324,12 +385,22 @@ function chargerSerie() {
     lecon.style.display = cfg.opa === 0 ? 'none' : 'block';
     lecon.innerHTML = getLecon();
 
+    // Bulle participe
     const bulleP = document.getElementById('bulle-participe');
     if (jeuActuel === 'participe') {
         bulleP.style.display = 'block';
         bulleP.style.opacity = cfg.opa;
     } else {
         bulleP.style.display = 'none';
+    }
+
+    // Bulle exceptions present2
+    const bulleEx = document.getElementById('bulle-exceptions');
+    if (jeuActuel === 'present2' && cfg.opa > 0) {
+        bulleEx.style.display = 'block';
+        bulleEx.style.opacity = cfg.opa;
+    } else {
+        bulleEx.style.display = 'none';
     }
 
     verbesPioches = piocher(cfg);
@@ -363,11 +434,20 @@ function getLecon() {
                 <b>je / il / elle / on</b> → <b>-e</b> &nbsp;|&nbsp;
                 <b>tu</b> → <b>-es</b> &nbsp;|&nbsp;
                 <b>ils / elles</b> → <b>-ent</b>`;
+        case 'present2':
+            return `<strong>Le présent des 2<sup>e</sup> et 3<sup>e</sup> groupes :</strong><br>
+                <b>je / tu</b> → <b>-s</b> &nbsp;|&nbsp;
+                <b>il / elle / on</b> → <b>-t</b> &nbsp;|&nbsp;
+                <b>ils / elles</b> → <b>-ent</b><br>
+                ⚠️ Verbes en <b>-DRE</b> conservent le <b>-d</b> · Verbes en <b>-TRE</b> conservent le <b>-t</b>`;
         default: return '';
     }
 }
 
-// --- Piocher les verbes ---
+// ============================================================
+// PIOCHER LES VERBES
+// ============================================================
+
 function piocher(cfg) {
     if (jeuActuel === 'present1') {
         const pool = verbesPresent.filter(v =>
@@ -376,6 +456,14 @@ function piocher(cfg) {
         return melangerTableau([...pool]).slice(0, cfg.nb);
     }
 
+    if (jeuActuel === 'present2') {
+        const tous = getVerbesP2();
+        let pool = tous.filter(v => cfg.niv.includes(v.niveau));
+        if (pool.length < cfg.nb) pool = tous; // fallback
+        return melangerTableau([...pool]).slice(0, cfg.nb);
+    }
+
+    // Jeux infinitif / conjugue / participe
     const pioquerGroupe = (gr, n) => {
         let pool = verbesInfinitifParticipe.filter(v =>
             v.gr === gr && cfg.niv.includes(v.niv) && !dejaVus.has(v.infi)
@@ -394,7 +482,10 @@ function piocher(cfg) {
     ]);
 }
 
-// --- Afficher la question ---
+// ============================================================
+// AFFICHER LA QUESTION
+// ============================================================
+
 function majInterface() {
     const v = verbesPioches[qIndex];
     document.getElementById('info-serie').innerText = `Série ${serie}/8 · Q${qIndex + 1}/8`;
@@ -404,13 +495,21 @@ function majInterface() {
     document.getElementById('input-zone').style.display = 'none';
     document.getElementById('zone-present-pelotes').style.display = 'none';
     document.getElementById('zone-present-form').style.display = 'none';
+    document.getElementById('zone-present2-pelotes').style.display = 'none';
+    document.getElementById('zone-present2-form').style.display = 'none';
     document.getElementById('verbe-txt').innerText = '';
+    p2EssaiCount = 0;
 
     if      (jeuActuel === 'infinitif')  afficherInfinitif(v);
     else if (jeuActuel === 'conjugue')   afficherConjugue(v);
     else if (jeuActuel === 'participe')  afficherParticipe(v);
     else if (jeuActuel === 'present1')   afficherPresent(v);
+    else if (jeuActuel === 'present2')   afficherPresent2(v);
 }
+
+// ============================================================
+// JEUX INFINITIF / CONJUGUÉ / PARTICIPE (inchangés)
+// ============================================================
 
 function afficherInfinitif(v) {
     document.getElementById('verbe-txt').innerText = v.infi;
@@ -493,11 +592,9 @@ function afficherPresentPelotes(v) {
         pelotesZone.appendChild(btn);
     });
 
-    // CORRECTION 1 : voix propre sans tiret
     parler(sujet + radicalNet + terminaison);
 }
 
-// CORRECTION 3 : afficherPresentForm — stocker radicalAlt si disponible
 function afficherPresentForm(v) {
     const zone = document.getElementById('zone-present-form');
     zone.style.display = 'block';
@@ -515,7 +612,6 @@ function afficherPresentForm(v) {
 
     zone.dataset.sujet      = sujet;
     zone.dataset.reponse    = radicalNet + terminaison;
-    // CORRECTION 4 : stocker la réponse alternative (-ayer)
     zone.dataset.reponseAlt = radicalAlt ? radicalAlt.replace('-', '') + terminaison : '';
 
     document.getElementById('form-infinitif').innerText = v.infinitif;
@@ -527,7 +623,6 @@ function afficherPresentForm(v) {
     inp.focus();
     essai = 0;
 
-    // CORRECTION 1 : voix propre
     parler(sujet + radicalNet + terminaison);
 }
 
@@ -538,7 +633,6 @@ function getRadicalPronominal(v, sujetBrut) {
     return v.radicalPluriel;
 }
 
-// CORRECTION 4 : getRadicalAlt pour pronominaux
 function getRadicalAltPronominal(v, sujetBrut) {
     if (!v.radicalAltJe) return null;
     if (sujetBrut === 'je')   return v.radicalAltJe;
@@ -547,7 +641,131 @@ function getRadicalAltPronominal(v, sujetBrut) {
     return v.radicalAltPluriel;
 }
 
-// --- Vérifications ---
+// ============================================================
+// PRÉSENT 2e/3e GROUPE
+// ============================================================
+
+// Retourne le radical selon le sujet, en tenant compte des pronominaux
+function getRadicalP2(v, sujetBrut) {
+    if (v.pronominal) {
+        if (sujetBrut === 'je')   return v.radicalJe;
+        if (sujetBrut === 'tu')   return v.radicalTu;
+        if (sujetBrut === 'il' || sujetBrut === 'elle' || sujetBrut === 'on') return v.radicalIl;
+        return v.radicalPluriel;
+    }
+    // Non pronominal : radical unique pour je/tu/il, radicalPluriel pour ils/elles
+    if (sujetBrut === 'ils' || sujetBrut === 'elles') return v.radicalPluriel;
+    return v.radical;
+}
+
+// Retourne la terminaison correcte selon le sujet
+function getTerminaisonP2(sujetBrut, terminaisons) {
+    // terminaisons format : "ds|ds|d|ent" — parties [0]=je, [1]=tu, [2]=il, [3]=ils
+    if (terminaisons) {
+        const parts = terminaisons.split('|');
+        if (sujetBrut === 'je')                                    return parts[0];
+        if (sujetBrut === 'tu')                                    return parts[1];
+        if (sujetBrut === 'il' || sujetBrut === 'elle' || sujetBrut === 'on') return parts[2];
+        return parts[3]; // ils/elles
+    }
+    // Terminaisons standard 2e/3e groupe
+    if (sujetBrut === 'je' || sujetBrut === 'tu') return 's';
+    if (sujetBrut === 'ils' || sujetBrut === 'elles') return 'ent';
+    return 't'; // il/elle/on
+}
+
+// Génère les 3 pelotes orangées
+// Ordre fixe : S-forme | T-forme | -ENT  (jamais mélangées en séries 1-3)
+function genererPelotesP2(v, sujetBrut) {
+    const cT = v.terminaisons;
+    const bonneT = getTerminaisonP2(sujetBrut, cT);
+
+    let libS, libT;
+    if (cT && cT.includes('ds')) { libS = '-ds'; libT = '-d'; }
+    else if (cT && cT.includes('ts')) { libS = '-ts'; libT = '-t'; }
+    else if (cT && cT.includes('cs')) { libS = '-cs'; libT = '-c'; }
+    else if (cT && cT.startsWith('x')) { libS = '-x'; libT = '-t'; }
+    else { libS = '-s'; libT = '-t'; }
+
+    return [
+        { text: libS,   correct: bonneT === libS.replace('-','')   },
+        { text: libT,   correct: bonneT === libT.replace('-','')   },
+        { text: '-ent', correct: bonneT === 'ent' },
+    ];
+}
+
+function afficherPresent2(v) {
+    const cfg = CONFIG['present2'][serie];
+    if (cfg.mode === 'pelotes') afficherPresent2Pelotes(v);
+    else afficherPresent2Form(v);
+}
+
+function afficherPresent2Pelotes(v) {
+    const zone = document.getElementById('zone-present2-pelotes');
+    zone.style.display = 'block';
+
+    const pool = v.sujetsPossibles || (v.pronominal ? ['je','tu','il','elle','ils','elles'] : ['je','tu','il','elle','ils','elles']);
+    const sujetBrut = pool[Math.floor(Math.random() * pool.length)];
+    const radical    = getRadicalP2(v, sujetBrut);
+    const sujet      = adapterSujet(sujetBrut, radical);
+    const radicalNet = radical.replace(/-/g, '');
+    const terminaison = getTerminaisonP2(sujetBrut, v.terminaisons);
+
+    zone.dataset.sujet      = sujet;
+    zone.dataset.radical    = radicalNet;
+    zone.dataset.terminaison = terminaison;
+
+    document.getElementById('p2-infinitif').innerText   = v.infinitif;
+    document.getElementById('p2-conjugaison').innerText = `${sujet} ${radicalNet}_`;
+
+    const pelotesZone = document.getElementById('p2-pelotes');
+    pelotesZone.innerHTML = '';
+
+    let pelotes = genererPelotesP2(v, sujetBrut);
+    if (CONFIG['present2'][serie].shuffle) pelotes = melangerTableau([...pelotes]);
+
+    pelotes.forEach(p => {
+        const btn = document.createElement('button');
+        btn.className = 'pelote-terminaison orange';
+        btn.textContent = p.text;
+        btn.dataset.correct = p.correct ? '1' : '0';
+        btn.onclick = () => verifierP2Pelote(p, btn, zone);
+        pelotesZone.appendChild(btn);
+    });
+
+    parler(sujet + ' ' + radicalNet + terminaison);
+}
+
+function afficherPresent2Form(v) {
+    const zone = document.getElementById('zone-present2-form');
+    zone.style.display = 'block';
+
+    const pool = v.sujetsPossibles || ['je','tu','il','elle','ils','elles'];
+    const sujetBrut  = pool[Math.floor(Math.random() * pool.length)];
+    const radical    = getRadicalP2(v, sujetBrut);
+    const sujet      = adapterSujet(sujetBrut, radical);
+    const radicalNet = radical.replace(/-/g, '');
+    const terminaison = getTerminaisonP2(sujetBrut, v.terminaisons);
+
+    zone.dataset.sujet   = sujet;
+    zone.dataset.reponse = radicalNet + terminaison;
+
+    document.getElementById('p2-form-infinitif').innerText = v.infinitif;
+    document.getElementById('p2-form-sujet').innerText     = sujet;
+
+    const inp = document.getElementById('p2-form-input');
+    inp.value    = '';
+    inp.disabled = false;
+    inp.focus();
+    p2EssaiCount = 0;
+
+    parler(sujet + ' ' + radicalNet + terminaison);
+}
+
+// ============================================================
+// VÉRIFICATIONS
+// ============================================================
+
 function verifierGroupe(choix) {
     const v   = verbesPioches[qIndex];
     const msg = document.getElementById('msg-zone');
@@ -624,7 +842,6 @@ function verifierTerminaison(term, btn, zone) {
     setTimeout(prochain, 2000);
 }
 
-// CORRECTION 4 : validerForm accepte radicalAlt pour les -ayer
 function validerForm() {
     const zone    = document.getElementById('zone-present-form');
     const inp     = document.getElementById('form-input');
@@ -648,7 +865,6 @@ function validerForm() {
         creerConfettis();
     } else {
         msg.style.color = '#e74c3c';
-        // Afficher les deux formes si elles existent
         const affichageReponse = bonneAlt
             ? `${sujet} ${bonne} (ou ${bonneAlt})`
             : `${sujet} ${bonne}`;
@@ -663,10 +879,87 @@ function validerForm() {
     }, 2500);
 }
 
-// --- Progression ---
+// Vérification pelote present2
+function verifierP2Pelote(p, btn, zone) {
+    const msg = document.getElementById('msg-zone');
+    const sujet  = zone.dataset.sujet;
+    const radical = zone.dataset.radical;
+    const terminaison = zone.dataset.terminaison;
+
+    document.querySelectorAll('#p2-pelotes .pelote-terminaison').forEach(b => b.disabled = true);
+
+    if (p.correct) {
+        btn.classList.add('correct');
+        msg.style.color = '#2ecc71';
+        msg.innerText   = '✓ Bravo !';
+        document.getElementById('p2-conjugaison').innerText = `${sujet} ${radical}${terminaison}`;
+        scoreTotal++; scoreSerie++;
+        document.getElementById('total-score').innerText = scoreTotal;
+        creerConfettis();
+        setTimeout(prochain, 2000);
+    } else {
+        p2EssaiCount++;
+        btn.classList.add('wrong');
+        if (p2EssaiCount >= 2) {
+            // Montrer la bonne réponse
+            msg.style.color = '#e74c3c';
+            msg.innerText   = `✗ La réponse : ${sujet} ${radical}${terminaison}`;
+            document.getElementById('p2-conjugaison').innerText = `${sujet} ${radical}${terminaison}`;
+            document.querySelectorAll('#p2-pelotes .pelote-terminaison').forEach(b => {
+                if (b.dataset.correct === '1') b.classList.add('correct');
+            });
+            parler(sujet + ' ' + radical + terminaison);
+            setTimeout(prochain, 3000);
+        } else {
+            msg.style.color = '#e74c3c';
+            msg.innerText   = '✗ Essaie encore !';
+            // Réactiver les pelotes non cochées
+            document.querySelectorAll('#p2-pelotes .pelote-terminaison').forEach(b => {
+                if (!b.classList.contains('wrong')) b.disabled = false;
+            });
+        }
+    }
+}
+
+// Vérification form present2
+function validerP2Form() {
+    const zone  = document.getElementById('zone-present2-form');
+    const inp   = document.getElementById('p2-form-input');
+    const rep   = inp.value.trim().toLowerCase();
+    const bonne = zone.dataset.reponse.toLowerCase();
+    const sujet = zone.dataset.sujet;
+    const msg   = document.getElementById('msg-zone');
+    const btnV  = document.getElementById('btn-valider-p2form');
+
+    inp.disabled  = true;
+    btnV.disabled = true;
+
+    if (rep === bonne) {
+        msg.style.color = '#2ecc71';
+        msg.innerText   = '✓ Bravo !';
+        scoreTotal++; scoreSerie++;
+        document.getElementById('total-score').innerText = scoreTotal;
+        creerConfettis();
+    } else {
+        msg.style.color = '#e74c3c';
+        msg.innerText   = `✗ La réponse : ${sujet} ${bonne}`;
+        parler(sujet + ' ' + bonne);
+    }
+
+    setTimeout(() => {
+        inp.disabled  = false;
+        btnV.disabled = false;
+        prochain();
+    }, 2500);
+}
+
+// ============================================================
+// PROGRESSION
+// ============================================================
+
 function prochain() {
     qIndex++;
-    if (qIndex < 8) { essai = 0; majInterface(); }
+    if (qIndex < 8) { essai = 0; p2EssaiCount = 0; majInterface(); }
     else finDeSerie();
 }
 
@@ -728,7 +1021,10 @@ function rejouerSerie() {
     chargerSerie();
 }
 
-// --- Debug ---
+// ============================================================
+// DEBUG
+// ============================================================
+
 function clicJuju() {
     clicksJuju++;
     if (clicksJuju >= 3) {
@@ -748,12 +1044,18 @@ function allerASerie() {
     }
 }
 
-// --- Touches Entrée ---
+// ============================================================
+// TOUCHES ENTRÉE
+// ============================================================
+
 document.getElementById('input-participe').addEventListener('keypress', e => {
     if (e.key === 'Enter') validerParticipe();
 });
 document.getElementById('form-input').addEventListener('keypress', e => {
     if (e.key === 'Enter') validerForm();
+});
+document.getElementById('p2-form-input').addEventListener('keypress', e => {
+    if (e.key === 'Enter') validerP2Form();
 });
 
 </script>
