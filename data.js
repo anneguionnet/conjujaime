@@ -1219,12 +1219,13 @@ const verbesPresent = [
         "radicalPluriel": "discour-"
     },
     {
-        "infinitif": "disparaître",
-        "groupe": 3,
-        "niveau": 3,
-        "radical": "disparai-",
-        "radicalPluriel": "disparaiss-"
-    },
+    "infinitif": "disparaître",
+    "groupe": 3,
+    "niveau": 3,
+    "radical": "disparai-",
+    "radicalIl": "disparaî-",
+    "radicalPluriel": "disparaiss-"
+},
     {
         "infinitif": "décrire",
         "groupe": 3,
@@ -1272,13 +1273,14 @@ const verbesPresent = [
         "radical": "dépein-",
         "radicalPluriel": "dépeign-"
     },
-    {
-        "infinitif": "déplaire",
-        "groupe": 3,
-        "niveau": 2,
-        "radical": "déplai-",
-        "radicalPluriel": "déplais-"
-    },
+{
+    "infinitif": "déplaire",
+    "groupe": 3,
+    "niveau": 2,
+    "radical": "déplai-",
+    "radicalIl": "déplaî-",
+    "radicalPluriel": "déplais-"
+},
     {
         "infinitif": "déteindre",
         "groupe": 3,
