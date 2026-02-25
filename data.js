@@ -1,5 +1,5 @@
 // ============================================================
-// DATA_TEST.js — BDD TEST Conju J'aime
+// data.js — BDD Conju J'aime
 // 20 verbes par groupe (+ 5 pronominaux gr1 et gr3)
 // ============================================================
 
@@ -995,7 +995,7 @@ const verbesPresent = [
         "radicalPluriel": "aplaniss-"
     },
     {
-        "infinitif": "Coudre",
+        "infinitif": "coudre",
         "groupe": 3,
         "niveau": 1,
         "radical": "cou",
@@ -1003,7 +1003,7 @@ const verbesPresent = [
         "terminaisons": "ds|ds|d|ent"
     },
     {
-        "infinitif": "Entendre",
+        "infinitif": "entendre",
         "groupe": 3,
         "niveau": 1,
         "radical": "enten",
@@ -1011,7 +1011,7 @@ const verbesPresent = [
         "terminaisons": "ds|ds|d|ent"
     },
     {
-        "infinitif": "Étendre",
+        "infinitif": "étendre",
         "groupe": 3,
         "niveau": 1,
         "radical": "éten",
@@ -1019,7 +1019,7 @@ const verbesPresent = [
         "terminaisons": "ds|ds|d|ent"
     },
     {
-        "infinitif": "Fendre",
+        "infinitif": "fendre",
         "groupe": 3,
         "niveau": 1,
         "radical": "fen",
@@ -1043,7 +1043,7 @@ const verbesPresent = [
         "terminaisons": "ds|ds|d|ent"
     },
     {
-        "infinitif": "Comprendre",
+        "infinitif": "comprendre",
         "groupe": 3,
         "niveau": 2,
         "radical": "compren",
@@ -1051,7 +1051,7 @@ const verbesPresent = [
         "terminaisons": "ds|ds|d|ent"
     },
     {
-        "infinitif": "Défendre",
+        "infinitif": "défendre",
         "groupe": 3,
         "niveau": 2,
         "radical": "défen",
@@ -1059,7 +1059,7 @@ const verbesPresent = [
         "terminaisons": "ds|ds|d|ent"
     },
     {
-        "infinitif": "Confondre",
+        "infinitif": "confondre",
         "groupe": 3,
         "niveau": 3,
         "radical": "confon",
@@ -1067,7 +1067,7 @@ const verbesPresent = [
         "terminaisons": "ds|ds|d|ent"
     },
     {
-        "infinitif": "Correspondre",
+        "infinitif": "correspondre",
         "groupe": 3,
         "niveau": 3,
         "radical": "correspon",
@@ -1075,7 +1075,7 @@ const verbesPresent = [
         "terminaisons": "ds|ds|d|ent"
     },
     {
-        "infinitif": "Découdre",
+        "infinitif": "découdre",
         "groupe": 3,
         "niveau": 3,
         "radical": "décou",
@@ -1083,7 +1083,7 @@ const verbesPresent = [
         "terminaisons": "ds|ds|d|ent"
     },
     {
-        "infinitif": "Distendre",
+        "infinitif": "distendre",
         "groupe": 3,
         "niveau": 3,
         "radical": "disten",
@@ -1091,7 +1091,7 @@ const verbesPresent = [
         "terminaisons": "ds|ds|d|ent"
     },
     {
-        "infinitif": "Condescendre",
+        "infinitif": "condescendre",
         "groupe": 3,
         "niveau": 4,
         "radical": "condescen",
@@ -1099,7 +1099,7 @@ const verbesPresent = [
         "terminaisons": "ds|ds|d|ent"
     },
     {
-        "infinitif": "Démordre",
+        "infinitif": "démordre",
         "groupe": 3,
         "niveau": 4,
         "radical": "démor",
@@ -1107,7 +1107,7 @@ const verbesPresent = [
         "terminaisons": "ds|ds|d|ent"
     },
     {
-        "infinitif": "Désapprendre",
+        "infinitif": "désapprendre",
         "groupe": 3,
         "niveau": 4,
         "radical": "désappren",
@@ -1115,7 +1115,7 @@ const verbesPresent = [
         "terminaisons": "ds|ds|d|ent"
     },
     {
-        "infinitif": "S'attendre",
+        "infinitif": "s'attendre",
         "groupe": 3,
         "niveau": 3,
         "pronominal": true,
