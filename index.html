@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conju J'aime 🐾</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============================================================
+     PAGE MENU PRINCIPAL
+     ============================================================ -->
+<div id="page-menu" class="ecran active">
+
+    <div class="menu-header">
+        <div class="menu-titre">Conju J'aime</div>
+        <div class="menu-sous-titre">L'univers de Juju 🐾</div>
+    </div>
+
+    <img src="purpleJuju.jpg" alt="Juju le chat" class="juju-menu">
+
+    <!-- INFINITIF -->
+    <div class="menu-section">
+        <div class="menu-section-titre">✏️ L'infinitif</div>
+        <button class="btn-menu-jeu mauve" onclick="lancerJeu('infinitif')">
+            📚 Les trois groupes
+        </button>
+        <button class="btn-menu-jeu mauve" onclick="lancerJeu('conjugue')">
+            🔍 L'infinitif conjugué
+        </button>
+        <!-- CORRECTION 5 : phrase d'encouragement avant participe présent -->
+        <p class="menu-encouragement">Deviens un expert en conjugaison en trouvant le participe présent !</p>
+        <button class="btn-menu-jeu mauve" onclick="lancerJeu('participe')">
+            ⭐ Le participe présent
+        </button>
+    </div>
+
+    <!-- PRÉSENT -->
+    <div class="menu-section">
+        <div class="menu-section-titre">🟢 Le présent</div>
+        <button class="btn-menu-jeu vert" onclick="lancerJeu('present1')">
+            🟢 1er groupe
+        </button>
+        <button class="btn-menu-jeu desactive" disabled>
+            🟠 2e et 3e groupe — bientôt !
+        </button>
+        <button class="btn-menu-jeu desactive" disabled>
+            🟣 Tous les groupes — bientôt !
+        </button>
+    </div>
+
+</div>
+
+
+<!-- ============================================================
+     PAGE DE JEU
+     ============================================================ -->
+<div id="page-jeu" class="ecran">
+
+    <div class="header-bandeau">
+        <button class="btn-retour" onclick="retourMenu()">← RETOUR</button>
+        <span id="info-serie" class="info-serie">Série 1/8 · Q1/8</span>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <button class="btn-son" onclick="toggleSon(this)">AUDIO ON</button>
+            <div class="score-zone">⭐ <span id="total-score">0</span></div>
+        </div>
+    </div>
+
+    <div class="bulle-lecon" id="lecon-zone"></div>
+
+    <div id="cartouche-jeu" class="cartouche">
+
+        <div style="text-align:right; margin-bottom:5px;">
+            <small id="titre-jeu" style="color:#aaa; font-size:12px;"></small>
+        </div>
+
+        <!-- CORRECTION 2 : Juju plus grand (géré dans style.css) -->
+        <img src="purpleJuju.jpg" alt="Juju" class="juju-jeu" onclick="clicJuju()">
+
+        <!-- Verbe affiché (jeux infinitif) -->
+        <div class="verbe-display" id="verbe-txt"></div>
+
+        <!-- Pelotes de groupe (jeux 1 & 2) -->
+        <div class="pelotes-zone" id="pelotes-zone"></div>
+
+        <!-- Zone saisie participe (jeu 3) -->
+        <div class="input-zone" id="input-zone" style="display:none;">
+            <input type="text" id="input-participe" class="input-reponse"
+                   placeholder="Tape le participe…"
+                   autocomplete="off" autocorrect="off" spellcheck="false">
+            <button class="btn-valider" onclick="validerParticipe()">OK</button>
+        </div>
+
+        <!-- Pelote indice (jeu 3) -->
+        <div id="pelote-indice-zone" style="text-align:center;"></div>
+
+        <!-- Présent — mode pelotes -->
+        <div id="zone-present-pelotes" style="display:none; text-align:center;">
+            <div class="infinitif-display" id="present-infinitif"></div>
+            <div class="conjugaison-display" id="present-conjugaison"></div>
+            <div class="pelotes-zone" id="present-pelotes"
+                 style="justify-content:center; gap:20px;"></div>
+        </div>
+
+        <!-- CORRECTION 3 : Présent — mode form — sujet + input sur la même ligne -->
+        <div id="zone-present-form" style="display:none; text-align:center;">
+            <div class="infinitif-display" id="form-infinitif"></div>
+            <div class="form-ligne">
+                <span class="sujet-inline" id="form-sujet"></span>
+                <input type="text" id="form-input" class="input-reponse"
+                       placeholder="conjugue…"
+                       autocomplete="off" autocorrect="off" spellcheck="false">
+            </div>
+            <button class="btn-valider" id="btn-valider-form"
+                    onclick="validerForm()" style="margin-top:15px;">OK</button>
+        </div>
+
+        <div class="msg-zone" id="msg-zone"></div>
+
+    </div>
+
+    <!-- Bulle participe présent -->
+    <div id="bulle-participe" class="bulle-lecon"
+         style="margin-top:15px; display:none;">
+        <strong>Retiens l'essentiel :</strong><br>
+        avoir→<b>ayant</b> | être→<b>étant</b> | faire→<b>faisant</b> |
+        dire→<b>disant</b><br>
+        savoir→<b>sachant</b> | prendre→<b>prenant</b> | suivre→<b>suivant</b><br>
+        boire→<b>buvant</b> | croire→<b>croyant</b> | naître→<b>naissant</b><br>
+        ⚠️ Verbes en <b>-CER</b> → cédille : avancer→<b>avançant</b><br>
+        ⚠️ Verbes en <b>-GER</b> → garde le -e : manger→<b>mangeant</b>
+    </div>
+
+    <!-- Écran intermédiaire -->
+    <div id="ecran-intermediaire" class="ecran-intermediaire">
+        <div class="intermediaire-titre" id="inter-titre">🎉 Bien joué !</div>
+        <div class="intermediaire-score" id="inter-score">0 / 8</div>
+        <div class="intermediaire-msg" id="inter-msg"></div>
+        <button class="btn-action" id="btn-serie-suivante"
+                onclick="prochaineSerie()">Série suivante →</button>
+        <button class="btn-action" id="btn-rejouer"
+                style="display:none;" onclick="rejouerSerie()">🔄 Réessayer</button>
+        <button class="btn-action" id="btn-retour-menu-inter"
+                style="background:#95a5a6;" onclick="retourMenu()">← Menu</button>
+    </div>
+
+    <!-- Debug panel -->
+    <div id="debug-panel">
+        Aller à la série :
+        <input type="number" id="debug-input" value="1" min="1" max="8"
+               style="width:40px; margin:0 5px;">
+        <button onclick="allerASerie()">Go</button>
+    </div>
+
+</div>
+
+
+<script>
+// ============================================================
+// ENGINE — Voix, confettis, utilitaires
+// ============================================================
+
+let sonActif = true;
+
+// CORRECTION 1 : fonction nettoyerPourVoix
+// Supprime les tirets des radicaux, normalise les apostrophes,
+// gère la liaison elles+voyelle pour éviter [elle s'arrête]
+function nettoyerPourVoix(txt) {
+    if (!txt) return '';
+    return txt
+        .replace(/-/g, '')           // supprime les tirets de radical
+        .replace(/'/g, "'")          // normalise apostrophes
+        .trim();
+}
+
+function parler(txt) {
+    if (!sonActif) return;
+    const txtNet = nettoyerPourVoix(txt);
+    if (!txtNet) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(txtNet);
+    u.lang = 'fr-FR';
+    u.rate = 0.9;
+    const setVoix = () => {
+        const vs = window.speechSynthesis.getVoices();
+        const f = vs.find(v => v.lang.startsWith('fr') &&
+                (v.name.includes('Amelie') || v.name.includes('Amélie') ||
+                 v.name.includes('Marie')  || v.name.includes('Maria')  ||
+                 v.name.includes('Audrey') || v.name.includes('Thomas')))
+               || vs.find(v => v.lang === 'fr-FR')
+               || vs.find(v => v.lang.startsWith('fr'));
+        if (f) u.voice = f;
+        window.speechSynthesis.speak(u);
+    };
+    if (window.speechSynthesis.getVoices().length > 0) setVoix();
+    else window.speechSynthesis.onvoiceschanged = setVoix;
+}
+
+function toggleSon(btn) {
+    sonActif = !sonActif;
+    btn.innerText = sonActif ? 'AUDIO ON' : 'AUDIO OFF';
+    if (!sonActif) window.speechSynthesis.cancel();
+}
+
+function creerConfettis() {
+    const couleurs = ['#f1c40f','#e74c3c','#3498db','#2ecc71','#a8e6cf','#724a91'];
+    for (let i = 0; i < 40; i++) {
+        const c = document.createElement('div');
+        c.className = 'confetti';
+        c.style.left = Math.random() * 100 + '%';
+        c.style.top = '-10px';
+        c.style.background = couleurs[Math.floor(Math.random() * couleurs.length)];
+        c.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+        c.style.animation = `fall ${1.5 + Math.random() * 1.5}s linear forwards`;
+        c.style.animationDelay = Math.random() * 0.5 + 's';
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 3000);
+    }
+}
+
+function melangerTableau(arr) {
+    return arr.sort(() => 0.5 - Math.random());
+}
+
+function adapterSujet(sujet, radical) {
+    if (sujet === 'je' && radical.replace('-','').match(/^[aeiouhéèêàâîïôù]/i)) return "j'";
+    return sujet;
+}
+
+window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+
+
+// ============================================================
+// GAMES — Les 4 jeux
+// ============================================================
+
+let jeuActuel   = '';
+let serie       = 1;
+let qIndex      = 0;
+let scoreTotal  = 0;
+let scoreSerie  = 0;
+let verbesPioches = [];
+let dejaVus     = new Set();
+let essai       = 0;
+let dernierOrdrePelotes = [1, 2, 3];
+let clicksJuju  = 0;
+
+const COULEURS_GR = { 1: '#a8e6cf', 2: '#ff9f7f', 3: '#b22222' };
+const SUJETS = ['je', 'tu', 'il', 'elle', 'on', 'ils', 'elles'];
+
+const CONFIG = {
+    infinitif: {
+        1: { niv:[1],         g1:4, g2:2, g3:2, nb:8, opa:1,   shuffle:false },
+        2: { niv:[1,2],       g1:4, g2:2, g3:2, nb:8, opa:1,   shuffle:false },
+        3: { niv:[1,2],       g1:3, g2:2, g3:3, nb:8, opa:0.5, shuffle:false },
+        4: { niv:[1,2,3],     g1:3, g2:2, g3:3, nb:8, opa:0.5, shuffle:false },
+        5: { niv:[2,3],       g1:2, g2:3, g3:3, nb:8, opa:0.1, shuffle:true  },
+        6: { niv:[2,3,4],     g1:2, g2:3, g3:3, nb:8, opa:0.1, shuffle:true  },
+        7: { niv:[3,4],       g1:2, g2:2, g3:4, nb:8, opa:0,   shuffle:true  },
+        8: { niv:[1,2,3,4],   g1:1, g2:3, g3:4, nb:8, opa:0,   shuffle:true  },
+    },
+    participe: {
+        1: { niv:[1],         g1:4, g2:2, g3:2, nb:8, opa:1   },
+        2: { niv:[1,2],       g1:4, g2:2, g3:2, nb:8, opa:1   },
+        3: { niv:[1,2],       g1:3, g2:2, g3:3, nb:8, opa:0.5 },
+        4: { niv:[1,2,3],     g1:3, g2:2, g3:3, nb:8, opa:0.5 },
+        5: { niv:[2,3],       g1:2, g2:3, g3:3, nb:8, opa:0.1 },
+        6: { niv:[2,3,4],     g1:2, g2:3, g3:3, nb:8, opa:0.1 },
+        7: { niv:[3,4],       g1:2, g2:2, g3:4, nb:8, opa:0   },
+        8: { niv:[1,2,3,4],   g1:1, g2:3, g3:4, nb:8, opa:0   },
+    },
+    present1: {
+        1: { niv:[1,2],       mode:'pelotes', nb:8, opa:1   },
+        2: { niv:[1,2],       mode:'pelotes', nb:8, opa:1   },
+        3: { niv:[1,2,3],     mode:'pelotes', nb:8, opa:0.5 },
+        4: { niv:[2,3],       mode:'pelotes', nb:8, opa:0.3 },
+        5: { niv:[2,3],       mode:'pelotes', nb:8, opa:0.1 },
+        6: { niv:[2,3,4],     mode:'form',    nb:8, opa:1   },
+        7: { niv:[3,4],       mode:'form',    nb:8, opa:0.5 },
+        8: { niv:[1,2,3,4],   mode:'form',    nb:8, opa:0   },
+    },
+};
+
+// --- Lancer un jeu ---
+function lancerJeu(type) {
+    jeuActuel  = type;
+    serie      = 1;
+    scoreTotal = 0;
+    dejaVus.clear();
+    dernierOrdrePelotes = [1, 2, 3];
+
+    document.getElementById('page-menu').classList.remove('active');
+    document.getElementById('page-jeu').classList.add('active');
+    document.getElementById('total-score').innerText = '0';
+
+    const titres = {
+        infinitif: 'Les trois groupes',
+        conjugue:  "L'infinitif conjugué",
+        participe: 'Le participe présent',
+        present1:  'Le présent — 1er groupe',
+    };
+    document.getElementById('titre-jeu').innerText = titres[type] || '';
+    chargerSerie();
+}
+
+function retourMenu() {
+    document.getElementById('page-jeu').classList.remove('active');
+    document.getElementById('page-menu').classList.add('active');
+    window.speechSynthesis.cancel();
+    document.getElementById('ecran-intermediaire').style.display = 'none';
+    document.getElementById('cartouche-jeu').style.display = 'block';
+}
+
+// --- Charger une série ---
+function chargerSerie() {
+    scoreSerie = 0;
+    qIndex     = 0;
+    essai      = 0;
+
+    const cfg = getConfig();
+
+    const lecon = document.getElementById('lecon-zone');
+    lecon.style.opacity = cfg.opa;
+    lecon.style.display = cfg.opa === 0 ? 'none' : 'block';
+    lecon.innerHTML = getLecon();
+
+    const bulleP = document.getElementById('bulle-participe');
+    if (jeuActuel === 'participe') {
+        bulleP.style.display = 'block';
+        bulleP.style.opacity = cfg.opa;
+    } else {
+        bulleP.style.display = 'none';
+    }
+
+    verbesPioches = piocher(cfg);
+    majInterface();
+}
+
+function getConfig() {
+    const type = (jeuActuel === 'conjugue') ? 'infinitif' : jeuActuel;
+    return CONFIG[type][serie];
+}
+
+function getLecon() {
+    switch (jeuActuel) {
+        case 'infinitif':
+            return `<strong>Le sais-tu ?</strong><br>
+                1) Verbes en <b>-ER</b> = 1<sup>er</sup> groupe (sauf <i>aller</i>).<br>
+                2) Verbes en <b>-IR</b> (participe en <b>-issant</b>) = 2<sup>e</sup> groupe.<br>
+                3) Tous les autres = 3<sup>e</sup> groupe.`;
+        case 'conjugue':
+            return `<strong>Retrouveras-tu l'infinitif ?</strong><br>
+                1) Terminaison en <b>-e, -es</b> ou <b>-é</b> → 1<sup>er</sup> groupe !<br>
+                2) On entend ou voit <b>-ss-</b> (-issant) → 2<sup>e</sup> groupe.<br>
+                3) Sinon, essaie <i>"Il faut…"</i> (faire, prendre, partir…).`;
+        case 'participe':
+            return `<strong>Trouve le bon participe présent !</strong><br>
+                1) Verbes en <b>-ER</b> → en <b>-ant</b> (chant<b>ant</b>)<br>
+                2) Verbes en <b>-IR</b> du 2<sup>e</sup> groupe → en <b>-issant</b><br>
+                3) Attention : <i>avoir→ayant, être→étant, savoir→sachant</i>`;
+        case 'present1':
+            return `<strong>Le présent du 1<sup>er</sup> groupe :</strong><br>
+                <b>je / il / elle / on</b> → <b>-e</b> &nbsp;|&nbsp;
+                <b>tu</b> → <b>-es</b> &nbsp;|&nbsp;
+                <b>ils / elles</b> → <b>-ent</b>`;
+        default: return '';
+    }
+}
+
+// --- Piocher les verbes ---
+function piocher(cfg) {
+    if (jeuActuel === 'present1') {
+        const pool = verbesPresent.filter(v =>
+            v.groupe === 1 && cfg.niv.includes(v.niveau)
+        );
+        return melangerTableau([...pool]).slice(0, cfg.nb);
+    }
+
+    const pioquerGroupe = (gr, n) => {
+        let pool = verbesInfinitifParticipe.filter(v =>
+            v.gr === gr && cfg.niv.includes(v.niv) && !dejaVus.has(v.infi)
+        );
+        if (pool.length < n) pool = verbesInfinitifParticipe.filter(v => v.gr === gr && cfg.niv.includes(v.niv));
+        if (pool.length < n) pool = verbesInfinitifParticipe.filter(v => v.gr === gr);
+        const sel = melangerTableau([...pool]).slice(0, n);
+        sel.forEach(v => dejaVus.add(v.infi));
+        return sel;
+    };
+
+    return melangerTableau([
+        ...pioquerGroupe(1, cfg.g1),
+        ...pioquerGroupe(2, cfg.g2),
+        ...pioquerGroupe(3, cfg.g3),
+    ]);
+}
+
+// --- Afficher la question ---
+function majInterface() {
+    const v = verbesPioches[qIndex];
+    document.getElementById('info-serie').innerText = `Série ${serie}/8 · Q${qIndex + 1}/8`;
+    document.getElementById('msg-zone').innerText = '';
+    document.getElementById('pelote-indice-zone').innerHTML = '';
+    document.getElementById('pelotes-zone').innerHTML = '';
+    document.getElementById('input-zone').style.display = 'none';
+    document.getElementById('zone-present-pelotes').style.display = 'none';
+    document.getElementById('zone-present-form').style.display = 'none';
+    document.getElementById('verbe-txt').innerText = '';
+
+    if      (jeuActuel === 'infinitif')  afficherInfinitif(v);
+    else if (jeuActuel === 'conjugue')   afficherConjugue(v);
+    else if (jeuActuel === 'participe')  afficherParticipe(v);
+    else if (jeuActuel === 'present1')   afficherPresent(v);
+}
+
+function afficherInfinitif(v) {
+    document.getElementById('verbe-txt').innerText = v.infi;
+    afficherPelotesGroupes(getConfig().shuffle);
+    parler(v.infi);
+}
+
+function afficherConjugue(v) {
+    document.getElementById('verbe-txt').innerText = v.v;
+    afficherPelotesGroupes(CONFIG['infinitif'][serie].shuffle);
+    parler(v.v);
+}
+
+function afficherPelotesGroupes(shuffle) {
+    const zone = document.getElementById('pelotes-zone');
+    zone.innerHTML = '';
+    let ordre = [1, 2, 3];
+    if (shuffle) {
+        do { ordre = melangerTableau([...ordre]); }
+        while (JSON.stringify(ordre) === JSON.stringify(dernierOrdrePelotes));
+        dernierOrdrePelotes = [...ordre];
+    }
+    ordre.forEach(gr => {
+        const btn = document.createElement('button');
+        btn.className = `pelote p${gr}`;
+        btn.textContent = gr === 1 ? '1er' : gr === 2 ? '2e' : '3e';
+        btn.onclick = () => verifierGroupe(gr);
+        zone.appendChild(btn);
+    });
+}
+
+function afficherParticipe(v) {
+    const texte = serie <= 4 ? v.v : v.infi;
+    document.getElementById('verbe-txt').innerText = texte;
+    document.getElementById('input-zone').style.display = 'flex';
+    const inp = document.getElementById('input-participe');
+    inp.value = '';
+    inp.disabled = false;
+    inp.focus();
+    essai = 0;
+    parler(texte);
+}
+
+function afficherPresent(v) {
+    const cfg = CONFIG['present1'][serie];
+    if (cfg.mode === 'pelotes') afficherPresentPelotes(v);
+    else afficherPresentForm(v);
+}
+
+function afficherPresentPelotes(v) {
+    const zone = document.getElementById('zone-present-pelotes');
+    zone.style.display = 'block';
+
+    const sujetBrut = SUJETS[Math.floor(Math.random() * SUJETS.length)];
+    const radical = v.pronominal ? getRadicalPronominal(v, sujetBrut) : v.radical;
+    const sujet = adapterSujet(sujetBrut, radical);
+    const radicalNet = radical.replace('-', '');
+
+    let terminaison;
+    if (sujetBrut === 'tu') terminaison = 'es';
+    else if (sujetBrut === 'ils' || sujetBrut === 'elles') terminaison = 'ent';
+    else terminaison = 'e';
+
+    zone.dataset.sujet       = sujet;
+    zone.dataset.radical     = radicalNet;
+    zone.dataset.terminaison = terminaison;
+
+    document.getElementById('present-infinitif').innerText = v.infinitif;
+    document.getElementById('present-conjugaison').innerText = `${sujet} ${radicalNet}_`;
+
+    const pelotesZone = document.getElementById('present-pelotes');
+    pelotesZone.innerHTML = '';
+    let terminaisons = ['e', 'es', 'ent'];
+    if (serie >= 4) terminaisons = melangerTableau([...terminaisons]);
+    terminaisons.forEach(t => {
+        const btn = document.createElement('button');
+        btn.className = 'pelote-terminaison';
+        btn.textContent = '-' + t;
+        btn.onclick = () => verifierTerminaison(t, btn, zone);
+        pelotesZone.appendChild(btn);
+    });
+
+    // CORRECTION 1 : voix propre sans tiret
+    parler(sujet + radicalNet + terminaison);
+}
+
+// CORRECTION 3 : afficherPresentForm — stocker radicalAlt si disponible
+function afficherPresentForm(v) {
+    const zone = document.getElementById('zone-present-form');
+    zone.style.display = 'block';
+
+    const sujetBrut = SUJETS[Math.floor(Math.random() * SUJETS.length)];
+    const radical    = v.pronominal ? getRadicalPronominal(v, sujetBrut) : v.radical;
+    const radicalAlt = v.pronominal ? getRadicalAltPronominal(v, sujetBrut) : (v.radicalAlt || null);
+    const sujet      = adapterSujet(sujetBrut, radical);
+    const radicalNet = radical.replace('-', '');
+
+    let terminaison;
+    if (sujetBrut === 'tu') terminaison = 'es';
+    else if (sujetBrut === 'ils' || sujetBrut === 'elles') terminaison = 'ent';
+    else terminaison = 'e';
+
+    zone.dataset.sujet      = sujet;
+    zone.dataset.reponse    = radicalNet + terminaison;
+    // CORRECTION 4 : stocker la réponse alternative (-ayer)
+    zone.dataset.reponseAlt = radicalAlt ? radicalAlt.replace('-', '') + terminaison : '';
+
+    document.getElementById('form-infinitif').innerText = v.infinitif;
+    document.getElementById('form-sujet').innerText     = sujet;
+
+    const inp = document.getElementById('form-input');
+    inp.value    = '';
+    inp.disabled = false;
+    inp.focus();
+    essai = 0;
+
+    // CORRECTION 1 : voix propre
+    parler(sujet + radicalNet + terminaison);
+}
+
+function getRadicalPronominal(v, sujetBrut) {
+    if (sujetBrut === 'je')   return v.radicalJe;
+    if (sujetBrut === 'tu')   return v.radicalTu;
+    if (sujetBrut === 'il' || sujetBrut === 'elle' || sujetBrut === 'on') return v.radicalIl;
+    return v.radicalPluriel;
+}
+
+// CORRECTION 4 : getRadicalAlt pour pronominaux
+function getRadicalAltPronominal(v, sujetBrut) {
+    if (!v.radicalAltJe) return null;
+    if (sujetBrut === 'je')   return v.radicalAltJe;
+    if (sujetBrut === 'tu')   return v.radicalAltTu;
+    if (sujetBrut === 'il' || sujetBrut === 'elle' || sujetBrut === 'on') return v.radicalAltIl;
+    return v.radicalAltPluriel;
+}
+
+// --- Vérifications ---
+function verifierGroupe(choix) {
+    const v   = verbesPioches[qIndex];
+    const msg = document.getElementById('msg-zone');
+    if (choix === v.gr) {
+        msg.style.color = '#2ecc71';
+        msg.innerText   = 'Bravo ! 🎉';
+        scoreTotal++; scoreSerie++;
+        document.getElementById('total-score').innerText = scoreTotal;
+        creerConfettis();
+        setTimeout(prochain, 1000);
+    } else {
+        msg.style.color = COULEURS_GR[v.gr];
+        msg.innerText   = `Indice : ${v.part}` + (v.gr === 2 ? ' (-issant)' : '');
+    }
+}
+
+function validerParticipe() {
+    const v       = verbesPioches[qIndex];
+    const inp     = document.getElementById('input-participe');
+    const reponse = inp.value.trim().toLowerCase();
+    const correct = v.part.toLowerCase();
+    const msg     = document.getElementById('msg-zone');
+    const indice  = document.getElementById('pelote-indice-zone');
+
+    essai++;
+
+    if (reponse === correct) {
+        msg.style.color = '#2ecc71';
+        msg.innerText   = 'Bravo ! 🎉';
+        scoreTotal++; scoreSerie++;
+        document.getElementById('total-score').innerText = scoreTotal;
+        parler(v.part);
+        creerConfettis();
+        inp.disabled = true;
+        setTimeout(prochain, 2000);
+    } else if (essai === 1) {
+        msg.innerText = '';
+        const pelote = document.createElement('div');
+        pelote.style.cssText = `width:55px;height:55px;border-radius:50%;background:${COULEURS_GR[v.gr]};margin:8px auto;`;
+        indice.appendChild(pelote);
+    } else {
+        msg.style.color = '#e74c3c';
+        msg.innerText   = `La réponse : ${v.part}`;
+        parler(v.infi);
+        inp.disabled = true;
+        setTimeout(prochain, 2500);
+    }
+}
+
+function verifierTerminaison(term, btn, zone) {
+    const bonne  = zone.dataset.terminaison;
+    const sujet  = zone.dataset.sujet;
+    const radical = zone.dataset.radical;
+    const msg    = document.getElementById('msg-zone');
+
+    document.querySelectorAll('.pelote-terminaison').forEach(b => b.disabled = true);
+
+    if (term === bonne) {
+        btn.classList.add('correct');
+        msg.style.color = '#2ecc71';
+        msg.innerText   = '✓ Bravo !';
+        document.getElementById('present-conjugaison').innerText = `${sujet} ${radical}${term}`;
+        scoreTotal++; scoreSerie++;
+        document.getElementById('total-score').innerText = scoreTotal;
+        creerConfettis();
+    } else {
+        btn.classList.add('wrong');
+        msg.style.color = '#e74c3c';
+        msg.innerText   = '✗ Regarde bien le sujet';
+        document.querySelectorAll('.pelote-terminaison').forEach(b => {
+            if (b.textContent === '-' + bonne) b.classList.add('correct');
+        });
+    }
+    setTimeout(prochain, 2000);
+}
+
+// CORRECTION 4 : validerForm accepte radicalAlt pour les -ayer
+function validerForm() {
+    const zone    = document.getElementById('zone-present-form');
+    const inp     = document.getElementById('form-input');
+    const reponse = inp.value.trim().toLowerCase();
+    const bonne   = zone.dataset.reponse.toLowerCase();
+    const bonneAlt = zone.dataset.reponseAlt ? zone.dataset.reponseAlt.toLowerCase() : null;
+    const sujet   = zone.dataset.sujet;
+    const msg     = document.getElementById('msg-zone');
+    const btnV    = document.getElementById('btn-valider-form');
+
+    inp.disabled  = true;
+    btnV.disabled = true;
+
+    const correct = reponse === bonne || (bonneAlt && reponse === bonneAlt);
+
+    if (correct) {
+        msg.style.color = '#2ecc71';
+        msg.innerText   = '✓ Bravo !';
+        scoreTotal++; scoreSerie++;
+        document.getElementById('total-score').innerText = scoreTotal;
+        creerConfettis();
+    } else {
+        msg.style.color = '#e74c3c';
+        // Afficher les deux formes si elles existent
+        const affichageReponse = bonneAlt
+            ? `${sujet} ${bonne} (ou ${bonneAlt})`
+            : `${sujet} ${bonne}`;
+        msg.innerText = `✗ La réponse : ${affichageReponse}`;
+        parler(sujet + ' ' + bonne);
+    }
+
+    setTimeout(() => {
+        inp.disabled  = false;
+        btnV.disabled = false;
+        prochain();
+    }, 2500);
+}
+
+// --- Progression ---
+function prochain() {
+    qIndex++;
+    if (qIndex < 8) { essai = 0; majInterface(); }
+    else finDeSerie();
+}
+
+function finDeSerie() {
+    document.getElementById('cartouche-jeu').style.display      = 'none';
+    document.getElementById('ecran-intermediaire').style.display = 'block';
+
+    const passe    = scoreSerie >= 5;
+    const derniere = serie >= 8;
+
+    const titre = document.getElementById('inter-titre');
+    if (derniere && passe) {
+        titre.innerText = '🏆 Félicitations !'; titre.style.color = '#f1c40f';
+    } else if (passe) {
+        titre.innerText = '🎉 Bien joué !';     titre.style.color = '#2ecc71';
+    } else {
+        titre.innerText = '💪 Encore un effort !'; titre.style.color = '#e74c3c';
+    }
+
+    document.getElementById('inter-score').innerText = `${scoreSerie} / 8`;
+
+    const msg = document.getElementById('inter-msg');
+    if (derniere && passe)   msg.innerText = 'Tu as terminé toutes les séries ! Excellent travail. 🌟';
+    else if (passe)          msg.innerText = `Série ${serie} validée ! Tu passes à la série ${serie + 1}.`;
+    else                     msg.innerText = `Il faut au moins 5/8 pour avancer. Courage, tu peux le faire !`;
+
+    const btnS = document.getElementById('btn-serie-suivante');
+    const btnR = document.getElementById('btn-rejouer');
+    const btnM = document.getElementById('btn-retour-menu-inter');
+
+    if (derniere && passe) {
+        btnS.style.display = 'none';
+        btnR.style.display = 'inline-block'; btnR.innerText = '🔄 Recommencer depuis le début';
+        btnM.style.display = 'inline-block';
+    } else if (passe) {
+        btnS.style.display = 'inline-block';
+        btnR.style.display = 'none';
+        btnM.style.display = 'inline-block';
+    } else {
+        btnS.style.display = 'none';
+        btnR.style.display = 'inline-block'; btnR.innerText = '🔄 Réessayer cette série';
+        btnM.style.display = 'inline-block';
+    }
+
+    if (passe) creerConfettis();
+}
+
+function prochaineSerie() {
+    serie++;
+    document.getElementById('ecran-intermediaire').style.display = 'none';
+    document.getElementById('cartouche-jeu').style.display       = 'block';
+    chargerSerie();
+}
+
+function rejouerSerie() {
+    if (serie >= 8) serie = 1;
+    document.getElementById('ecran-intermediaire').style.display = 'none';
+    document.getElementById('cartouche-jeu').style.display       = 'block';
+    chargerSerie();
+}
+
+// --- Debug ---
+function clicJuju() {
+    clicksJuju++;
+    if (clicksJuju >= 3) {
+        clicksJuju = 0;
+        const p = document.getElementById('debug-panel');
+        p.style.display = p.style.display === 'none' ? 'block' : 'none';
+    }
+    setTimeout(() => { clicksJuju = 0; }, 800);
+}
+
+function allerASerie() {
+    const val = parseInt(document.getElementById('debug-input').value);
+    if (val >= 1 && val <= 8) {
+        serie = val;
+        document.getElementById('debug-panel').style.display = 'none';
+        chargerSerie();
+    }
+}
+
+// --- Touches Entrée ---
+document.getElementById('input-participe').addEventListener('keypress', e => {
+    if (e.key === 'Enter') validerParticipe();
+});
+document.getElementById('form-input').addEventListener('keypress', e => {
+    if (e.key === 'Enter') validerForm();
+});
+
+</script>
+
+</body>
+</html>
