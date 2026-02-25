@@ -831,20 +831,6 @@ const verbesPresent = [
         "radicalPluriel": "se dévou-"
     },
     {
-        "infinitif": "se frayer",
-        "groupe": 1,
-        "niveau": 4,
-        "pronominal": true,
-        "radicalJe": "me frai-",
-        "radicalTu": "te frai-",
-        "radicalIl": "se frai-",
-        "radicalPluriel": "se frai-",
-        "radicalAltJe": "me fray-",
-        "radicalAltTu": "te fray-",
-        "radicalAltIl": "se fray-",
-        "radicalAltPluriel": "se fray-"
-    },
-    {
         "infinitif": "se méfier",
         "groupe": 1,
         "niveau": 2,
