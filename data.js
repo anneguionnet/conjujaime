@@ -1168,5 +1168,181 @@ const verbesPresent = [
         "radicalIl": "se décou",
         "radicalPluriel": "se décous",
         "terminaisons": "ds|ds|d|ent"
+    },
+    {
+        "infinitif": "cuire",
+        "groupe": 3,
+        "niveau": 3,
+        "radical": "cui-",
+        "radicalPluriel": "cuis-"
+    },
+    {
+        "infinitif": "desservir",
+        "groupe": 3,
+        "niveau": 3,
+        "radical": "desser-",
+        "radicalPluriel": "desserv-"
+    },
+    {
+        "infinitif": "devenir",
+        "groupe": 3,
+        "niveau": 2,
+        "radical": "devien-",
+        "radicalPluriel": "devienn-"
+    },
+    {
+        "infinitif": "devoir",
+        "groupe": 3,
+        "niveau": 1,
+        "radical": "doi-",
+        "radicalPluriel": "doiv-"
+    },
+    {
+        "infinitif": "dire",
+        "groupe": 3,
+        "niveau": 1,
+        "radical": "di-",
+        "radicalPluriel": "dis-"
+    },
+    {
+        "infinitif": "disconvenir",
+        "groupe": 3,
+        "niveau": 4,
+        "radical": "disconvien-",
+        "radicalPluriel": "disconvienn-"
+    },
+    {
+        "infinitif": "discourir",
+        "groupe": 3,
+        "niveau": 4,
+        "radical": "discour-",
+        "radicalPluriel": "discour-"
+    },
+    {
+        "infinitif": "disparaître",
+        "groupe": 3,
+        "niveau": 3,
+        "radical": "disparai-",
+        "radicalPluriel": "disparaiss-"
+    },
+    {
+        "infinitif": "décrire",
+        "groupe": 3,
+        "niveau": 1,
+        "radical": "décri-",
+        "radicalPluriel": "décriv-"
+    },
+    {
+        "infinitif": "déduire",
+        "groupe": 3,
+        "niveau": 3,
+        "radical": "dédui-",
+        "radicalPluriel": "déduis-"
+    },
+    {
+        "infinitif": "défaire",
+        "groupe": 3,
+        "niveau": 2,
+        "radical": "défai-",
+        "sujetsPossibles": [
+            "je",
+            "tu",
+            "il",
+            "elle"
+        ]
+    },
+    {
+        "infinitif": "démentir",
+        "groupe": 3,
+        "niveau": 3,
+        "radical": "démen-",
+        "radicalPluriel": "dément-"
+    },
+    {
+        "infinitif": "départir",
+        "groupe": 3,
+        "niveau": 4,
+        "radical": "dépar-",
+        "radicalPluriel": "départ-"
+    },
+    {
+        "infinitif": "dépeindre",
+        "groupe": 3,
+        "niveau": 4,
+        "radical": "dépein-",
+        "radicalPluriel": "dépeign-"
+    },
+    {
+        "infinitif": "déplaire",
+        "groupe": 3,
+        "niveau": 2,
+        "radical": "déplai-",
+        "radicalPluriel": "déplais-"
+    },
+    {
+        "infinitif": "déteindre",
+        "groupe": 3,
+        "niveau": 3,
+        "radical": "détein-",
+        "radicalPluriel": "déteign-"
+    },
+    {
+        "infinitif": "détenir",
+        "groupe": 3,
+        "niveau": 2,
+        "radical": "détien-",
+        "radicalPluriel": "détienn-"
+    },
+    {
+        "infinitif": "détruire",
+        "groupe": 3,
+        "niveau": 2,
+        "radical": "détrui-",
+        "radicalPluriel": "détruis-"
+    },
+    {
+        "infinitif": "faire",
+        "groupe": 3,
+        "niveau": 2,
+        "radical": "fai-",
+        "sujetsPossibles": [
+            "je",
+            "tu",
+            "il",
+            "elle"
+        ]
+    },
+    {
+        "infinitif": "feindre",
+        "groupe": 3,
+        "niveau": 4,
+        "radical": "fein-",
+        "radicalPluriel": "feign-"
+    },
+    {
+        "infinitif": "frire",
+        "groupe": 3,
+        "niveau": 3,
+        "radical": "fri-",
+        "sujetsPossibles": [
+            "je",
+            "tu",
+            "il",
+            "elle"
+        ]
+    },
+    {
+        "infinitif": "fuir",
+        "groupe": 3,
+        "niveau": 1,
+        "radical": "fui-",
+        "radicalPluriel": "fui-"
+    },
+    {
+        "infinitif": "geindre",
+        "groupe": 3,
+        "niveau": 4,
+        "radical": "gein-",
+        "radicalPluriel": "geign-"
     }
 ];
