@@ -759,7 +759,9 @@ function afficherPresent2Form(v) {
     inp.focus();
     p2EssaiCount = 0;
 
-    parler(sujet + ' ' + radicalNet + terminaison);
+    // Série 6 : voix dit la forme conjuguée. Séries 7+ : voix dit l'infinitif
+    if (serie >= 7) parler(v.infinitif);
+    else parler(sujet + ' ' + radicalNet + terminaison);
 }
 
 // ============================================================
@@ -862,6 +864,7 @@ function validerForm() {
         msg.innerText   = '✓ Bravo !';
         scoreTotal++; scoreSerie++;
         document.getElementById('total-score').innerText = scoreTotal;
+        parler(sujet + ' ' + bonne);
         creerConfettis();
     } else {
         msg.style.color = '#e74c3c';
@@ -940,6 +943,7 @@ function validerP2Form() {
         msg.innerText   = '✓ Bravo !';
         scoreTotal++; scoreSerie++;
         document.getElementById('total-score').innerText = scoreTotal;
+        parler(sujet + ' ' + bonne);
         creerConfettis();
     } else {
         msg.style.color = '#e74c3c';
