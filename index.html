@@ -723,9 +723,10 @@ function afficherPresent2Pelotes(v) {
     let pelotes = genererPelotesP2(v, sujetBrut);
     if (CONFIG['present2'][serie].shuffle) pelotes = melangerTableau([...pelotes]);
 
+    const couleurP2 = v.groupe === 2 ? 'orange' : 'rouge';
     pelotes.forEach(p => {
         const btn = document.createElement('button');
-        btn.className = 'pelote-terminaison orange';
+        btn.className = `pelote-terminaison ${couleurP2}`;
         btn.textContent = p.text;
         btn.dataset.correct = p.correct ? '1' : '0';
         btn.onclick = () => verifierP2Pelote(p, btn, zone);
