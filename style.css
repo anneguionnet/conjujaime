@@ -305,6 +305,12 @@ body {
     transform: scale(0.9);
     opacity: 0.5;
 }
+.pelote-terminaison.orange {
+    background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+}
+.pelote-terminaison.rouge {
+    background: linear-gradient(135deg, #c0392b 0%, #922b21 100%);
+}
 
 /* --- Zone saisie (mode FORM) --- */
 .input-zone {
