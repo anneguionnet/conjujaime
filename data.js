@@ -1332,5 +1332,32 @@ const verbesPresent = [
         "niveau": 4,
         "radical": "gein-",
         "radicalPluriel": "geign-"
-    }
+    },
+  {
+          infinitif: "mettre",
+          groupe: 3,
+          niveau: 1,
+          radical: "me",
+          radicalPluriel: "mett",
+          terminaisons: "ts|ts|t|ent",
+        },
+        {
+          infinitif: "se mettre",
+          groupe: 3,
+          niveau: 3,
+          pronominal: true,
+          radicalJe: "me me",
+          radicalTu: "te me",
+          radicalIl: "se me",
+          radicalPluriel: "se mett",
+          terminaisons: "ts|ts|t|ent",
+        },
+  {
+          infinitif: "battre",
+          groupe: 3,
+          niveau: 1,
+          radical: "bat-",
+          radicalPluriel: "batt-",
+          terminaisons: "ts|ts|t|ent",
+        },
 ];
