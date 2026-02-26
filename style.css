@@ -507,3 +507,47 @@ body {
     .conjugaison-display { font-size: 36px; }
     .input-reponse { width: 180px; font-size: 18px; }
 }
+/* ============================================================
+   PRESENT TOUS LES GROUPES — ajouts
+   ============================================================ */
+
+.btn-menu-jeu.violet { background: linear-gradient(135deg, #6c3483 0%, #a569bd 100%); }
+
+/* Tableau leçon présent tous groupes */
+.tableau-lecon {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-top: 8px;
+}
+.tableau-lecon th, .tableau-lecon td {
+    border: 1px solid #fbc02d;
+    padding: 4px 6px;
+    text-align: center;
+}
+.tableau-lecon th {
+    background: #fbc02d;
+    color: #5d4037;
+    font-weight: bold;
+}
+.tableau-lecon tr:nth-child(even) td { background: rgba(251,192,45,0.1); }
+
+/* Bulle règles presentTous */
+.bulle-tous {
+    background: #fffde7;
+    border: 2px solid #f9a825;
+    border-radius: 20px;
+    padding: 12px 18px;
+    margin-top: 15px;
+    width: 95%;
+    max-width: 500px;
+    font-size: 13px;
+    color: var(--gris-texte);
+    line-height: 1.7;
+    transition: opacity 0.5s;
+}
+
+/* Pelote verte pour groupe 1 dans presentTous */
+.pelote-terminaison.vert {
+    background: linear-gradient(135deg, var(--vert-gr1) 0%, var(--vert-gr1-f) 100%);
+}
