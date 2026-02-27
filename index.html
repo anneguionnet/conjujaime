@@ -848,6 +848,7 @@ function afficherPresent2Form(v) {
     zone.dataset.sujet        = sujet;
     zone.dataset.reponse      = radicalNet + terminaison;
     zone.dataset.terminaison  = terminaison;
+    zone.dataset.reponseAlt   = v.radicalAlt ? v.radicalAlt.replace(/-/g, '') + terminaison : '';
     zone.dataset.modeTerminaison = (serie === 6) ? '1' : '0';
 
     document.getElementById('p2-form-infinitif').innerText = v.infinitif;
@@ -1264,14 +1265,9 @@ function afficherPresentTousForm(v) {
     const radicalNet  = radical.replace(/-/g, '');
     const terminaison = getTerminaisonPT(v, sujetBrut);
 
-    let reponseAlt = '';
-    if (v.radicalAlt && v.groupe === 1) {
-        reponseAlt = v.radicalAlt.replace(/-/g, '') + terminaison;
-    }
-
     zone.dataset.sujet           = sujet;
     zone.dataset.reponse         = radicalNet + terminaison;
-    zone.dataset.reponseAlt      = reponseAlt;
+    zone.dataset.reponseAlt      = v.radicalAlt ? v.radicalAlt.replace(/-/g, '') + terminaison : '';
     zone.dataset.terminaison     = terminaison;
     zone.dataset.modeTerminaison = (serie === 6) ? '1' : '0';
 
