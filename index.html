@@ -959,6 +959,19 @@ function verifierTerminaison(term, btn, zone) {
     setTimeout(prochain, 2000);
 }
 
+function afficherFormeComplete(sujetEl, inputEl, btnEl, formeComplete) {
+    // Cacher le champ et le bouton, afficher la forme complète en violet
+    inputEl.style.display = 'none';
+    btnEl.style.display   = 'none';
+    sujetEl.innerHTML = `<span style="color:#6c3483; font-size:1.5em; font-weight:bold;">${formeComplete}</span>`;
+}
+
+function restaurerFormInput(sujetEl, sujetTexte, inputEl, btnEl) {
+    inputEl.style.display = '';
+    btnEl.style.display   = '';
+    sujetEl.innerHTML = sujetTexte;
+}
+
 function validerForm() {
     const zone    = document.getElementById('zone-present-form');
     const inp     = document.getElementById('form-input');
@@ -987,10 +1000,19 @@ function validerForm() {
         msg.innerText   = '✓ Bravo !';
         scoreTotal++; scoreSerie++;
         document.getElementById('total-score').innerText = scoreTotal;
-        // Série 6 : pas de répétition voix. Série 7 : voix dit la forme complète
+        if (serie === 6) {
+            afficherFormeComplete(
+                document.getElementById('form-sujet'),
+                inp, btnV,
+                sujet + ' ' + bonne
+            );
+        }
         if (serie >= 7) parler(sujet + ' ' + bonne);
         creerConfettis();
-        setTimeout(() => { inp.disabled = false; btnV.disabled = false; prochain(); }, 2000);
+        setTimeout(() => {
+            restaurerFormInput(document.getElementById('form-sujet'), sujet, inp, btnV);
+            inp.disabled = false; btnV.disabled = false; prochain();
+        }, 2000);
     } else {
         essai++;
         if (essai >= 2) {
@@ -1077,9 +1099,19 @@ function validerP2Form() {
         msg.innerText   = '✓ Bravo !';
         scoreTotal++; scoreSerie++;
         document.getElementById('total-score').innerText = scoreTotal;
+        if (serie === 6) {
+            afficherFormeComplete(
+                document.getElementById('p2-form-sujet'),
+                inp, btnV,
+                sujet + ' ' + bonne
+            );
+        }
         if (serie >= 7) parler(sujet + ' ' + bonne);
         creerConfettis();
-        setTimeout(() => { inp.disabled = false; btnV.disabled = false; prochain(); }, 2000);
+        setTimeout(() => {
+            restaurerFormInput(document.getElementById('p2-form-sujet'), sujet, inp, btnV);
+            inp.disabled = false; btnV.disabled = false; prochain();
+        }, 2000);
     } else {
         p2EssaiCount++;
         if (p2EssaiCount >= 2) {
@@ -1362,10 +1394,19 @@ function validerPTForm() {
         msg.innerText   = '✓ Bravo !';
         scoreTotal++; scoreSerie++;
         document.getElementById('total-score').innerText = scoreTotal;
-        // Série 6 : pas de répétition. Séries 7-8 : voix dit la forme complète
+        if (serie === 6) {
+            afficherFormeComplete(
+                document.getElementById('pt-form-sujet'),
+                inp, btnV,
+                sujet + ' ' + bonne
+            );
+        }
         if (serie >= 7) parler(sujet + ' ' + bonne);
         creerConfettis();
-        setTimeout(() => { inp.disabled = false; btnV.disabled = false; prochain(); }, 2000);
+        setTimeout(() => {
+            restaurerFormInput(document.getElementById('pt-form-sujet'), sujet, inp, btnV);
+            inp.disabled = false; btnV.disabled = false; prochain();
+        }, 2000);
     } else {
         ptEssaiCount++;
         if (ptEssaiCount >= 2) {
