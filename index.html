@@ -703,21 +703,21 @@ function afficherPresentForm(v) {
     if (serie === 6) {
         // Afficher : SUJET + RADICAL + champ
         document.getElementById('form-sujet').innerText = sujet + ' ' + radicalNet;
-        inp.placeholder = 'terminaison…';
-        inp.style.width = '90px';
+        inp.placeholder = '…';
+        inp.style.width = '80px'; inp.style.fontSize = '28px'; inp.style.textAlign = 'center'; inp.style.padding = '12px 8px';
         inp.focus();
         parler(sujet + ' ' + radicalNet + terminaison);
     } else if (serie >= 7) {
         // Afficher : SUJET seul + champ (forme entière)
         document.getElementById('form-sujet').innerText = sujet;
         inp.placeholder = 'conjugue…';
-        inp.style.width = '220px';
+        inp.style.width = '220px'; inp.style.fontSize = '22px'; inp.style.padding = '12px 15px';
         inp.focus();
         parler(v.infinitif);
     } else {
         document.getElementById('form-sujet').innerText = sujet;
         inp.placeholder = 'conjugue…';
-        inp.style.width = '220px';
+        inp.style.width = '220px'; inp.style.fontSize = '22px'; inp.style.padding = '12px 15px';
         inp.focus();
         parler(sujet + ' ' + radicalNet + terminaison);
     }
@@ -859,20 +859,20 @@ function afficherPresent2Form(v) {
 
     if (serie === 6) {
         document.getElementById('p2-form-sujet').innerText = sujet + ' ' + radicalNet;
-        inp.placeholder = 'terminaison…';
-        inp.style.width = '90px';
+        inp.placeholder = '…';
+        inp.style.width = '80px'; inp.style.fontSize = '28px'; inp.style.textAlign = 'center'; inp.style.padding = '12px 8px';
         inp.focus();
         parler(sujet + ' ' + radicalNet + terminaison);
     } else if (serie >= 7) {
         document.getElementById('p2-form-sujet').innerText = sujet;
         inp.placeholder = 'conjugue…';
-        inp.style.width = '220px';
+        inp.style.width = '220px'; inp.style.fontSize = '22px'; inp.style.padding = '12px 15px';
         inp.focus();
         parler(v.infinitif);
     } else {
         document.getElementById('p2-form-sujet').innerText = sujet;
         inp.placeholder = 'conjugue…';
-        inp.style.width = '220px';
+        inp.style.width = '220px'; inp.style.fontSize = '22px'; inp.style.padding = '12px 15px';
         inp.focus();
         parler(sujet + ' ' + radicalNet + terminaison);
     }
@@ -1284,21 +1284,21 @@ function afficherPresentTousForm(v) {
 
     if (serie === 6) {
         document.getElementById('pt-form-sujet').innerText = sujet + ' ' + radicalNet;
-        inp.placeholder = 'terminaison…';
-        inp.style.width = '90px';
+        inp.placeholder = '…';
+        inp.style.width = '80px'; inp.style.fontSize = '28px'; inp.style.textAlign = 'center'; inp.style.padding = '12px 8px';
         inp.focus();
         parler(sujet + ' ' + radicalNet + terminaison);
     } else if (serie === 8) {
         document.getElementById('pt-form-sujet').innerText = sujet;
         inp.placeholder = 'conjugue…';
-        inp.style.width = '220px';
+        inp.style.width = '220px'; inp.style.fontSize = '22px'; inp.style.padding = '12px 15px';
         inp.focus();
         parler(v.infinitif);
     } else {
         // série 7
         document.getElementById('pt-form-sujet').innerText = sujet;
         inp.placeholder = 'conjugue…';
-        inp.style.width = '220px';
+        inp.style.width = '220px'; inp.style.fontSize = '22px'; inp.style.padding = '12px 15px';
         inp.focus();
         parler(v.infinitif);
     }
