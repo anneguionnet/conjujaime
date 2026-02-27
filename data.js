@@ -1097,7 +1097,7 @@ const verbesPresent = [
         "groupe": 3,
         "niveau": 4,
         "radical": "désappren",
-        "radicalPluriel": "désapprennd",
+        "radicalPluriel": "désapprenn",
         "terminaisons": "ds|ds|d|ent"
     },
     {
