@@ -704,17 +704,20 @@ function afficherPresentForm(v) {
         // Afficher : SUJET + RADICAL + champ
         document.getElementById('form-sujet').innerText = sujet + ' ' + radicalNet;
         inp.placeholder = 'terminaison…';
+        inp.style.width = '90px';
         inp.focus();
         parler(sujet + ' ' + radicalNet + terminaison);
     } else if (serie >= 7) {
         // Afficher : SUJET seul + champ (forme entière)
         document.getElementById('form-sujet').innerText = sujet;
         inp.placeholder = 'conjugue…';
+        inp.style.width = '220px';
         inp.focus();
         parler(v.infinitif);
     } else {
         document.getElementById('form-sujet').innerText = sujet;
         inp.placeholder = 'conjugue…';
+        inp.style.width = '220px';
         inp.focus();
         parler(sujet + ' ' + radicalNet + terminaison);
     }
@@ -857,16 +860,19 @@ function afficherPresent2Form(v) {
     if (serie === 6) {
         document.getElementById('p2-form-sujet').innerText = sujet + ' ' + radicalNet;
         inp.placeholder = 'terminaison…';
+        inp.style.width = '90px';
         inp.focus();
         parler(sujet + ' ' + radicalNet + terminaison);
     } else if (serie >= 7) {
         document.getElementById('p2-form-sujet').innerText = sujet;
         inp.placeholder = 'conjugue…';
+        inp.style.width = '220px';
         inp.focus();
         parler(v.infinitif);
     } else {
         document.getElementById('p2-form-sujet').innerText = sujet;
         inp.placeholder = 'conjugue…';
+        inp.style.width = '220px';
         inp.focus();
         parler(sujet + ' ' + radicalNet + terminaison);
     }
@@ -1279,17 +1285,20 @@ function afficherPresentTousForm(v) {
     if (serie === 6) {
         document.getElementById('pt-form-sujet').innerText = sujet + ' ' + radicalNet;
         inp.placeholder = 'terminaison…';
+        inp.style.width = '90px';
         inp.focus();
         parler(sujet + ' ' + radicalNet + terminaison);
     } else if (serie === 8) {
         document.getElementById('pt-form-sujet').innerText = sujet;
         inp.placeholder = 'conjugue…';
+        inp.style.width = '220px';
         inp.focus();
         parler(v.infinitif);
     } else {
         // série 7
         document.getElementById('pt-form-sujet').innerText = sujet;
         inp.placeholder = 'conjugue…';
+        inp.style.width = '220px';
         inp.focus();
         parler(v.infinitif);
     }
