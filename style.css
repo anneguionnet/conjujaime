@@ -212,6 +212,21 @@ body {
     transition: opacity 0.5s;
 }
 
+/* --- Bulle Retiens present1 (violet) --- */
+.bulle-present1 {
+    background: #f3e5f5;
+    border: 2px solid #9b59b6;
+    border-radius: 20px;
+    padding: 12px 18px;
+    margin-top: 15px;
+    width: 95%;
+    max-width: 500px;
+    font-size: 14px;
+    color: #6c3483;
+    line-height: 1.6;
+    transition: opacity 0.5s;
+}
+
 /* --- Cartouche de jeu --- */
 .cartouche {
     background: white;
@@ -532,17 +547,17 @@ body {
 }
 .tableau-lecon tr:nth-child(even) td { background: rgba(251,192,45,0.1); }
 
-/* Bulle règles presentTous */
+/* Bulle Retiens presentTous (violet/brun) */
 .bulle-tous {
-    background: #fffde7;
-    border: 2px solid #f9a825;
+    background: #f3e5f5;
+    border: 2px solid #9b59b6;
     border-radius: 20px;
     padding: 12px 18px;
     margin-top: 15px;
     width: 95%;
     max-width: 500px;
     font-size: 13px;
-    color: var(--gris-texte);
+    color: #5d4037;
     line-height: 1.7;
     transition: opacity 0.5s;
 }
@@ -550,12 +565,4 @@ body {
 /* Pelote verte pour groupe 1 dans presentTous */
 .pelote-terminaison.vert {
     background: linear-gradient(135deg, var(--vert-gr1) 0%, var(--vert-gr1-f) 100%);
-}
-/* Pelote orangé foncé (-s, -t, -ds, -ts, -d) */
-.pelote-terminaison.pelote-orange-fonce {
-    background: linear-gradient(135deg, #d35400 0%, #b94600 100%);
-}
-/* Pelote violette séries 3-5 */
-.pelote-terminaison.violet {
-    background: linear-gradient(135deg, #9b59b6 0%, #7d3c98 100%);
 }
