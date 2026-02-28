@@ -700,7 +700,7 @@ function afficherPresentForm(v) {
     inp.disabled = false;
     essai = 0;
 
-    if (serie >= 6) {
+    if (serie === 6) {
         // Afficher : SUJET + RADICAL + champ
         document.getElementById('form-sujet').innerText = sujet + ' ' + radicalNet;
         inp.placeholder = '…';
@@ -858,7 +858,7 @@ function afficherPresent2Form(v) {
     inp.disabled = false;
     p2EssaiCount = 0;
 
-    if (serie >= 6) {
+    if (serie === 6) {
         document.getElementById('p2-form-sujet').innerText = sujet + ' ' + radicalNet;
         inp.placeholder = '…';
         inp.style.width = '80px'; inp.style.fontSize = '28px'; inp.style.textAlign = 'center'; inp.style.padding = '12px 8px';
@@ -1310,7 +1310,7 @@ function afficherPresentTousForm(v) {
     inp.disabled = false;
     ptEssaiCount = 0;
 
-    if (serie >= 6) {
+    if (serie === 6) {
         document.getElementById('pt-form-sujet').innerText = sujet + ' ' + radicalNet;
         inp.placeholder = '…';
         inp.style.width = '80px'; inp.style.fontSize = '28px'; inp.style.textAlign = 'center'; inp.style.padding = '12px 8px';
