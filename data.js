@@ -156,8 +156,6 @@ const verbesInfinitifParticipe = [
           {"infi": "boire", "v": "ils boivent", "part": "buvant", "gr": 3, "niv": 1},
           {"infi": "bouillir", "v": "nous bouillions", "part": "bouillant", "gr": 3, "niv": 4},
           {"infi": "bouillir", "v": "il bout", "part": "bouillant", "gr": 3, "niv": 4},
-          {"infi": "circoncire", "v": "il circoncisait", "part": "circoncisant", "gr": 3, "niv": 4},
-          {"infi": "circoncire", "v": "ils circoncisent", "part": "circoncisant", "gr": 3, "niv": 4},
           {"infi": "combattre", "v": "tu combattais", "part": "combattant", "gr": 3, "niv": 3},
           {"infi": "comprendre", "v": "tu comprenais", "part": "comprenant", "gr": 3, "niv": 1},
           {"infi": "comprendre", "v": "il comprend", "part": "comprenant", "gr": 3, "niv": 1},
