@@ -1211,15 +1211,12 @@ function getTerminaisonPT(v, sujetBrut) {
     return 't';
 }
 
-function couleurPelotePT(text, groupe) {
-    // Séries 3-5 : tout violet
-    if (serie >= 3) return 'violet';
-    // Séries 1-2 : couleur selon le texte de la terminaison
-    const t = text.replace('-','');
+function couleurPelotePT(text) {
+    const t = text.replace(/-/g, '').toLowerCase();
     if (t === 'e' || t === 'es') return 'vert';
-    if (t === 'ent') return groupe === 1 ? 'vert' : 'pelote-orange-fonce';
-    // -s, -t, -ds, -ts, -d et variantes
-    return 'pelote-orange-fonce';
+    if (t === 'ent') return 'violet-clair';
+    // -s, -t, -ts, -ds, -d et variantes → orange/rouge
+    return 'orange';
 }
 
 function genererPelotesPT(v, sujetBrut) {
@@ -1269,7 +1266,7 @@ function genererPelotesPT(v, sujetBrut) {
     }
 
     // Ajouter la couleur à chaque pelote
-    return pelotes.map(p => ({ ...p, couleur: couleurPelotePT(p.text, gr) }));
+    return pelotes.map(p => ({ ...p, couleur: couleurPelotePT(p.text) }));
 }
 
 function afficherPresentTous(v) {
