@@ -823,7 +823,7 @@ const verbesPresent = [
           infinitif: "élargit",
           groupe: 2,
           niveau: 2,
-          radical: "élargit-",
+          radical: "élargi-",
           radicalPluriel: "élargiss-",
         },
         {
