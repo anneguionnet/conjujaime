@@ -376,7 +376,7 @@ function toggleSon(btn) {
 
 function creerConfettis() {
     const couleurs = ['#f1c40f','#e74c3c','#3498db','#2ecc71','#a8e6cf','#724a91'];
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < 80; i++) {
         const c = document.createElement('div');
         c.className = 'confetti';
         c.style.left = Math.random() * 100 + '%';
@@ -1803,7 +1803,7 @@ function finDeSerie() {
         btnM.style.display = 'inline-block';
     }
 
-    if (passe) creerConfettis();
+    creerConfettis();
 }
 
 function prochaineSerie() {
@@ -3400,7 +3400,7 @@ function finDeSerie() {
         btnM.style.display = 'inline-block';
     }
 
-    if (passe) creerConfettis();
+    creerConfettis();
 }
 
 function prochaineSerie() {
