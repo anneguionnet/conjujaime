@@ -192,12 +192,6 @@ const verbesImparfait1 = [
     radicalImp: "vou-",
   },
   {
-    infinitif: "abattre",
-    groupe: 3,
-    niveau: 2,
-    radicalImp: "abattr-",
-  },
-  {
     infinitif: "accourir",
     groupe: 3,
     niveau: 3,
@@ -214,12 +208,6 @@ const verbesImparfait1 = [
     groupe: 3,
     niveau: 3,
     radicalImp: "apercev-",
-  },
-  {
-    infinitif: "apprendre",
-    groupe: 3,
-    niveau: 2,
-    radicalImp: "appren-",
   },
   {
     infinitif: "attendre",
@@ -257,11 +245,11 @@ const verbesImparfait1 = [
     niveau: 3,
     radicalImp: "combatt-",
   },
-  {
-    infinitif: "comprendre",
+ {
+    infinitif: "abattre",
     groupe: 3,
     niveau: 2,
-    radicalImp: "compren-",
+    radicalImp: "abatt-",
   },
   {
     infinitif: "conclure",
@@ -823,6 +811,18 @@ const verbesImparfait1 = [
 
 const verbesImparfait2 = [
   {
+    infinitif: "comprendre",
+    groupe: 3,
+    niveau: 2,
+    radicalImp: "compren-",
+  },
+ {
+    infinitif: "apprendre",
+    groupe: 3,
+    niveau: 2,
+    radicalImp: "appren-",
+  }, 
+ {
     infinitif: "aboyer",
     groupe: 1,
     niveau: 2,
