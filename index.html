@@ -38,13 +38,13 @@
     <!-- PRÉSENT -->
     <div class="menu-section">
         <div class="menu-section-titre">🟢 Le présent</div>
-        <button class="btn-menu-jeu vert" onclick="lancerJeu('present1')">
+        <button class="btn-menu-jeu bleu" onclick="lancerJeu('present1')">
             🟢 1er groupe
         </button>
-        <button class="btn-menu-jeu orange" onclick="lancerJeu('present2')">
+        <button class="btn-menu-jeu bleu2" onclick="lancerJeu('present2')">
             🟠 2e et 3e groupe
         </button>
-        <button class="btn-menu-jeu violet" onclick="lancerJeu('presentTous')">
+        <button class="btn-menu-jeu bleu3" onclick="lancerJeu('presentTous')">
             🟣 Tous les groupes
         </button>
     </div>
@@ -55,16 +55,28 @@
         <button class="btn-menu-jeu vert" onclick="lancerJeu('imparfait1')">
             Imparfait régulier
         </button>
-        <button class="btn-menu-jeu orange" onclick="lancerJeu('imparfait2')">
+        <button class="btn-menu-jeu vert2" onclick="lancerJeu('imparfait2')">
             Imparfait altéré
         </button>
         <p class="menu-encouragement">Peux-tu conjuguer l'imparfait au pluriel ? Juju t'attend !</p>
-        <button class="btn-menu-jeu violet" onclick="lancerJeu('imparfait3')">
+        <button class="btn-menu-jeu vert3" onclick="lancerJeu('imparfait3')">
             🟣 L'imparfait au pluriel
         </button>
     </div>
 
-</div>
+    <div class="menu-section">
+        <div class="menu-section-titre">🟡 Le futur</div>
+        <button class="btn-menu-jeu turquoise" onclick="lancerJeu('futur1')">
+            🟡 Futur simple
+        </button>
+        <button class="btn-menu-jeu turquoise2" onclick="lancerJeu('futur2')">
+            🟠 Futur irrégulier
+        </button>
+        <p class="menu-encouragement">Maintenant que tu es un as du futur, lance-toi dans le conditionnel !</p>
+        <button class="btn-menu-jeu vert-bleu" onclick="lancerJeu('conditionnel')">
+            🟢 Le conditionnel
+        </button>
+    </div>
 
 </div>
 
@@ -88,7 +100,7 @@
     <div id="cartouche-jeu" class="cartouche">
 
         <div style="text-align:right; margin-bottom:5px;">
-            <small id="titre-jeu" style="color:#aaa; font-size:12px;"></small>
+            <small id="titre-jeu" style="color:#724a91; font-size:16px; font-weight:bold;"></small>
         </div>
 
         <img src="purpleJuju.jpg" alt="Juju" class="juju-jeu" onclick="clicJuju()">
@@ -232,10 +244,25 @@
                        autocomplete="off" autocorrect="off" spellcheck="false">
             </div>
             <button class="btn-valider" id="btn-valider-impform"
-                    onclick="validerImpForm()" style="margin-top:15px;">OK</button>
+                    onclick="jeuActuel.startsWith('futur') || jeuActuel === 'conditionnel' ? validerFutForm() : validerImpForm()" style="margin-top:15px;">OK</button>
         </div>
 
         <div class="msg-zone" id="msg-zone"></div>
+
+        <!-- Bulle Retiens conditionnel -->
+        <div id="bulle-conditionnel" class="bulle-present1" style="display:none;">
+            💬 <i>Retiens : le radical du conditionnel est le même que celui du futur. Seules les terminaisons changent !</i>
+        </div>
+
+        <!-- Bulle Retiens futur1 -->
+        <div id="bulle-futur1" class="bulle-present1" style="display:none;">
+            💬 <i>Retiens : n'oublie pas le <b>-E</b> des verbes en <b>-ER</b>. On l'entend à peine… mais il est là !</i>
+        </div>
+
+        <!-- Bulle Retiens futur2 -->
+        <div id="bulle-futur2" class="bulle-present1" style="display:none;">
+            💬 <i>Retiens l'astuce de Juju : pour les verbes irréguliers, Juju est là pour t'aider. Les verbes en <b>-YER</b> perdent le <b>-Y-</b> pour un <b>-i-</b>. Certains prennent un accent grave, d'autres une double consonne, certains ont même plusieurs orthographes comme <b>ouïr</b> : j'ouïerai, tu oiras, elle orra. C'est joli, n'est-ce pas ? Allez, à toi de jouer !</i>
+        </div>
 
         <!-- Bulle Retiens imparfait1 -->
         <div id="bulle-imparfait1" class="bulle-present1" style="display:none;">
@@ -299,6 +326,7 @@
 
 <script src="data.js"></script>
 <script src="verbesImparfait_gd.js"></script>
+<script src="dataFuturCondi.js"></script>
 <script>
 // ============================================================
 // ENGINE — Voix, confettis, utilitaires
@@ -466,6 +494,36 @@ const CONFIG = {
         7: { niv:[3,4],     mode:'form-entiere',     nb:8, opa:0.5  },
         8: { niv:[1,2,3,4], mode:'form-entiere',     nb:8, opa:0    },
     },
+    futur1: {
+        1: { niv:[1],       mode:'pelotes',          nb:8, opa:1,    shuffle:false },
+        2: { niv:[1,2],     mode:'pelotes',          nb:8, opa:0.75, shuffle:true  },
+        3: { niv:[2,3],     mode:'pelotes',          nb:8, opa:0.5,  shuffle:true  },
+        4: { niv:[1,2],     mode:'form-terminaison', nb:8, opa:0.75 },
+        5: { niv:[1,2],     mode:'form-entiere',     nb:8, opa:0.5  },
+        6: { niv:[2,3],     mode:'form-entiere',     nb:8, opa:0.25 },
+        7: { niv:[3,4],     mode:'form-entiere',     nb:8, opa:0.1  },
+        8: { niv:[1,2,3,4], mode:'form-entiere',     nb:8, opa:0    },
+    },
+    conditionnel: {
+        1: { niv:[1],       mode:'pelotes',          nb:8, opa:1,    shuffle:false },
+        2: { niv:[1,2],     mode:'pelotes',          nb:8, opa:0.75, shuffle:true  },
+        3: { niv:[2,3],     mode:'pelotes',          nb:8, opa:0.5,  shuffle:true  },
+        4: { niv:[1,2],     mode:'form-terminaison', nb:8, opa:0.75 },
+        5: { niv:[1,2],     mode:'form-entiere',     nb:8, opa:0.5  },
+        6: { niv:[2,3],     mode:'form-entiere',     nb:8, opa:0.25 },
+        7: { niv:[3,4],     mode:'form-entiere',     nb:8, opa:0.1  },
+        8: { niv:[1,2,3,4], mode:'form-entiere',     nb:8, opa:0    },
+    },
+    futur2: {
+        1: { niv:[1],       mode:'pelotes',          nb:8, opa:1,    shuffle:false },
+        2: { niv:[1,2],     mode:'pelotes',          nb:8, opa:0.75, shuffle:true  },
+        3: { niv:[2,3],     mode:'pelotes',          nb:8, opa:0.5,  shuffle:true  },
+        4: { niv:[1,2],     mode:'form-terminaison', nb:8, opa:0.75 },
+        5: { niv:[1,2],     mode:'form-entiere',     nb:8, opa:0.5  },
+        6: { niv:[2,3],     mode:'form-entiere',     nb:8, opa:0.25 },
+        7: { niv:[3,4],     mode:'form-entiere',     nb:8, opa:0.1  },
+        8: { niv:[1,2,3,4], mode:'form-entiere',     nb:8, opa:0    },
+    },
     present2: {
         // Séries 1-3 : pelotes, niveaux 1-2, pelotes fixes (pas de shuffle)
         1: { niv:[1,2], mode:'pelotes', nb:8, opa:1,   shuffle:false },
@@ -511,10 +569,13 @@ function lancerJeu(type) {
         infinitif: 'Les trois groupes',
         conjugue:  "L'infinitif conjugué",
         participe: 'Le participe présent',
-        present1:  'Le présent — 1er groupe',
-        present2:  'Le présent — 2e et 3e groupe',
-        presentTous: 'Le présent — Tous les groupes',
-        imparfait1:  "L'imparfait — régulier",
+        conditionnel: 'Le conditionnel présent',
+        futur1:    'Le futur simple',
+        futur2:    'Le futur des verbes irréguliers',
+        present1:  'Le présent - 1er groupe',
+        present2:  'Le présent - 2e et 3e groupe',
+        presentTous: 'Le présent - Tous les groupes',
+        imparfait1:  "L'imparfait régulier",
         imparfait2:  "L'imparfait altéré",
         imparfait3:  "L'imparfait au pluriel",
     };
@@ -523,6 +584,8 @@ function lancerJeu(type) {
 }
 
 function retourMenu() {
+    recentTermsFut.length = 0;
+    if (recentlyPicked['conditionnel']) recentlyPicked['conditionnel'] = [];
     document.getElementById('page-jeu').classList.remove('active');
     document.getElementById('page-menu').classList.add('active');
     window.speechSynthesis.cancel();
@@ -582,6 +645,33 @@ function chargerSerie() {
         bulleEx.style.opacity = cfg.opa;
     } else {
         bulleEx.style.display = 'none';
+    }
+
+    // Bulle Retiens conditionnel
+    const bulleCond = document.getElementById('bulle-conditionnel');
+    if (bulleCond) {
+        if (jeuActuel === 'conditionnel' && cfg.opa > 0) {
+            bulleCond.style.display = 'block';
+            bulleCond.style.opacity = cfg.opa;
+        } else { bulleCond.style.display = 'none'; }
+    }
+
+    // Bulle Retiens futur1
+    const bulleFut1 = document.getElementById('bulle-futur1');
+    if (bulleFut1) {
+        if (jeuActuel === 'futur1' && cfg.opa > 0) {
+            bulleFut1.style.display = 'block';
+            bulleFut1.style.opacity = cfg.opa;
+        } else { bulleFut1.style.display = 'none'; }
+    }
+
+    // Bulle Retiens futur2
+    const bulleFut2 = document.getElementById('bulle-futur2');
+    if (bulleFut2) {
+        if (jeuActuel === 'futur2' && cfg.opa > 0) {
+            bulleFut2.style.display = 'block';
+            bulleFut2.style.opacity = cfg.opa;
+        } else { bulleFut2.style.display = 'none'; }
     }
 
     // Bulle Retiens imparfait1
@@ -660,6 +750,20 @@ function getLecon() {
                 <b>ils / elles</b> → <b>-ent</b><br>
                 ⚠️ Verbes du <span style="color:#ff9f7f;">2<sup>e</sup> groupe</span> en <b>-ISSENT</b> au pluriel<br>
                 ⚠️ Verbes en <b>-DRE</b> conservent le <b>-d</b> · Verbes en <b>-TRE</b> conservent le <b>-t</b>`;
+        case 'conditionnel':
+            return `<strong>Le conditionnel se construit comme le futur, mais avec les terminaisons de l'imparfait :</strong><br>
+                <b>je/tu → -ais &nbsp;|&nbsp; il/elle/on → -ait &nbsp;|&nbsp;
+                nous → -ions &nbsp;|&nbsp; vous → -iez &nbsp;|&nbsp; ils/elles → -aient</b><br>
+                💬 <i>Astuce de Juju : si tu connais le futur et l'imparfait, le conditionnel n'a plus de secret pour toi !</i>`;
+        case 'futur1':
+            return `<strong>Au futur, on ajoute les terminaisons du verbe <i>avoir</i> à l'infinitif :</strong><br>
+                <b>je → -ai &nbsp;|&nbsp; tu → -as &nbsp;|&nbsp; il/elle/on → -a &nbsp;|&nbsp;
+                nous → -ons &nbsp;|&nbsp; vous → -ez &nbsp;|&nbsp; ils/elles → -ont</b><br>
+                💬 <i>Astuce de Juju : pour les verbes en <b>-RE</b>, on enlève le <b>-e</b> final : dire → je dirai</i>`;
+        case 'futur2':
+            return `<strong>Au futur, on ajoute les terminaisons du verbe <i>avoir</i> :</strong><br>
+                <b>je → -ai &nbsp;|&nbsp; tu → -as &nbsp;|&nbsp; il/elle/on → -a &nbsp;|&nbsp;
+                nous → -ons &nbsp;|&nbsp; vous → -ez &nbsp;|&nbsp; ils/elles → -ont</b>`;
         case 'imparfait1':
             return `<strong>L'imparfait est l'un des temps les plus faciles.</strong>
                 Au radical, on ajoute la terminaison :<br>
@@ -683,6 +787,23 @@ function getLecon() {
 // ============================================================
 
 function piocher(cfg) {
+    if (jeuActuel === 'futur1' || jeuActuel === 'futur2' || jeuActuel === 'conditionnel') {
+        let pool;
+        if (jeuActuel === 'futur1') pool = verbesFutur1;
+        else if (jeuActuel === 'futur2') pool = verbesFutur2;
+        else pool = [...verbesFutur1, ...verbesFutur2];
+        pool = pool.filter(v => cfg.niv.includes(v.niveau));
+        const key = jeuActuel;
+        if (!recentlyPicked[key]) recentlyPicked[key] = [];
+        const seuil = Math.min(30, Math.floor(pool.length * 0.6));
+        let filtered = pool.filter(v => !recentlyPicked[key].includes(v.infinitif));
+        if (filtered.length < cfg.nb) { filtered = pool; recentlyPicked[key] = []; }
+        const picked = melangerTableau([...filtered]).slice(0, cfg.nb);
+        picked.forEach(v => recentlyPicked[key].push(v.infinitif));
+        if (recentlyPicked[key].length > seuil) recentlyPicked[key].splice(0, cfg.nb);
+        return picked;
+    }
+
     if (jeuActuel === 'imparfait1' || jeuActuel === 'imparfait2' || jeuActuel === 'imparfait3') {
         let pool;
         if (jeuActuel === 'imparfait1') pool = verbesImparfait1;
@@ -754,12 +875,16 @@ function majInterface() {
     document.getElementById('verbe-txt').innerText = '';
     p2EssaiCount = 0;
     ptEssaiCount = 0;
+    impEssaiCount = 0;
+    futEssaiCount = 0;
 
     if      (jeuActuel === 'infinitif')   afficherInfinitif(v);
     else if (jeuActuel === 'conjugue')    afficherConjugue(v);
     else if (jeuActuel === 'participe')   afficherParticipe(v);
     else if (jeuActuel === 'present1')    afficherPresent(v);
     else if (jeuActuel === 'present2')    afficherPresent2(v);
+    else if (jeuActuel === 'presentTous') afficherPresentTous(v);
+    else if (jeuActuel === 'futur1' || jeuActuel === 'futur2' || jeuActuel === 'conditionnel') afficherFutur(v);
     else if (jeuActuel === 'imparfait1' || jeuActuel === 'imparfait2') afficherImparfait(v);
     else if (jeuActuel === 'imparfait3') afficherImparfait3(v);
 }
@@ -1631,7 +1756,7 @@ function validerPTForm() {
 
 function prochain() {
     qIndex++;
-    if (qIndex < 8) { essai = 0; p2EssaiCount = 0; ptEssaiCount = 0; impEssaiCount = 0; majInterface(); }
+    if (qIndex < 8) { essai = 0; p2EssaiCount = 0; ptEssaiCount = 0; impEssaiCount = 0; futEssaiCount = 0; majInterface(); }
     else finDeSerie();
 }
 
@@ -1725,6 +1850,8 @@ function allerASerie() {
 // ============================================================
 
 let impEssaiCount = 0;
+let futEssaiCount = 0;
+const recentlyPicked = {};
 let impFormLocked = false;
 
 function getRadicalImp(v, sujet) {
@@ -1763,6 +1890,260 @@ function getCouleurImp(v) {
     if (v.groupe === 1) return { cls: 'vert',   hex: '#a8e6cf' };
     if (v.groupe === 2) return { cls: 'orange', hex: '#ff9f7f' };
     return                     { cls: 'rouge',  hex: '#b22222' };
+}
+
+
+// ============================================================
+// FUTUR SIMPLE ET IRRÉGULIER
+// ============================================================
+
+let futFormLocked = false;
+
+function getRadicalFut(v, sujet) {
+    // Radical futur = radicalFut si présent, sinon infinitif
+    // Pour les verbes en -re : enlever le -e final
+    let rad = v.radicalFut || v.infinitif;
+    return rad;
+}
+
+function getTerminaisonCond(sujet) {
+    if (sujet === 'je' || sujet === 'tu')                    return 'ais';
+    if (['il','elle','on'].includes(sujet))                   return 'ait';
+    if (sujet === 'nous')                                     return 'ions';
+    if (sujet === 'vous')                                     return 'iez';
+    return 'aient'; // ils/elles
+}
+
+function getTerminaisonFut(sujet) {
+    if (sujet === 'je')  return 'ai';
+    if (sujet === 'tu')  return 'as';
+    if (sujet === 'il' || sujet === 'elle' || sujet === 'on') return 'a';
+    if (sujet === 'nous') return 'ons';
+    if (sujet === 'vous') return 'ez';
+    return 'ont'; // ils/elles
+}
+
+function getCouleurFut(v) {
+    if (v.groupe === 1) return { cls: 'vert',   hex: '#a8e6cf' };
+    if (v.groupe === 2) return { cls: 'orange', hex: '#ff9f7f' };
+    return                     { cls: 'rouge',  hex: '#b22222' };
+}
+
+function getSujetsFut(v) {
+    return v.sujetsPossibles || ['je','tu','il','elle','nous','vous','ils','elles'];
+}
+
+// Historique des terminaisons récentes pour éviter les répétitions
+const recentTermsFut = [];
+const MAX_RECENT_TERMS = 4;
+
+function getSujetFutSansRepetition(v) {
+    const sujets = getSujetsFut(v);
+    // Grouper par terminaison
+    const terminaisonsParSujet = {
+        'je': 'ai', 'tu': 'as', 'il': 'a', 'elle': 'a', 'on': 'a',
+        'nous': 'ons', 'vous': 'ez', 'ils': 'ont', 'elles': 'ont'
+    };
+    // Filtrer les sujets dont la terminaison n'a pas été vue récemment
+    const sujetsDispos = sujets.filter(s => {
+        const term = terminaisonsParSujet[s] || '';
+        return !recentTermsFut.includes(term);
+    });
+    // Si tous exclus, on repart de zéro
+    const pool = sujetsDispos.length > 0 ? sujetsDispos : sujets;
+    const sujet = pool[Math.floor(Math.random() * pool.length)];
+    // Mémoriser la terminaison
+    const term = terminaisonsParSujet[sujet] || '';
+    recentTermsFut.push(term);
+    if (recentTermsFut.length > MAX_RECENT_TERMS) recentTermsFut.shift();
+    return sujet;
+}
+
+function afficherFutur(v) {
+    futEssaiCount = 0;
+    const cfg = getConfig();
+    const sujet = getSujetFutSansRepetition(v);
+    const radical = getRadicalFut(v, sujet);
+    const sujetAff = adapterSujet(sujet, radical, v.hAspire);
+    const bonneTerminaison = (jeuActuel === 'conditionnel')
+        ? getTerminaisonCond(sujet)
+        : getTerminaisonFut(sujet);
+    const couleur = getCouleurFut(v);
+
+    if (cfg.mode === 'pelotes') {
+        document.getElementById('zone-imparfait-form').style.display = 'none';
+        const zone = document.getElementById('zone-imparfait-pelotes');
+        zone.style.display = 'block';
+        zone.dataset.sujet = sujet;
+        zone.dataset.bonne = bonneTerminaison;
+
+        document.getElementById('imp-pelotes-infinitif').innerText = v.infinitif;
+        document.getElementById('imp-pelotes-sujet').innerText = sujetAff + ' ' + radical + '-';
+
+        // Pelotes spécifiques par sujet
+        let terminaisons;
+        if (jeuActuel === 'conditionnel') {
+            // Pelotes conditionnel
+            if      (sujet === 'je' || sujet === 'tu')        terminaisons = ['ais', 'ait', 'aient'];
+            else if (['il','elle','on'].includes(sujet))       terminaisons = ['ait', 'ais', 'aient'];
+            else if (sujet === 'nous')                         terminaisons = ['ions', 'iez', 'aient'];
+            else if (sujet === 'vous')                         terminaisons = ['iez', 'ions', 'aient'];
+            else                                               terminaisons = ['aient', 'ions', 'iez'];
+        } else {
+            // Pelotes futur (pièges phonétiques)
+            if      (sujet === 'je')                           terminaisons = ['ai', 'a', 'ez'];
+            else if (sujet === 'tu')                           terminaisons = ['as', 'ai', 'a'];
+            else if (['il','elle','on'].includes(sujet))       terminaisons = ['a', 'ai', 'as'];
+            else if (sujet === 'nous')                         terminaisons = ['ons', 'ez', 'ont'];
+            else if (sujet === 'vous')                         terminaisons = ['ez', 'ont', 'ai'];
+            else                                               terminaisons = ['ont', 'ons', 'ez'];
+        }
+        if (cfg.shuffle) terminaisons = melangerTableau([...terminaisons]);
+
+        const pzone = document.getElementById('imp-pelotes-zone');
+        pzone.innerHTML = '';
+        terminaisons.forEach(term => {
+            const btn = document.createElement('button');
+            btn.className = 'pelote-terminaison ' + couleur.cls;
+            btn.style.background = couleur.hex;
+            btn.innerText = '-' + term;
+            btn.onclick = () => validerFutPelote(term, bonneTerminaison, sujetAff, radical, v);
+            pzone.appendChild(btn);
+        });
+        parler(v.infinitif);
+
+    } else {
+        document.getElementById('zone-imparfait-pelotes').style.display = 'none';
+        const zone = document.getElementById('zone-imparfait-form');
+        zone.style.display = 'block';
+        zone.dataset.sujet    = sujet;
+        zone.dataset.radical  = radical;
+        zone.dataset.sujetAff = sujetAff;
+
+        document.getElementById('imp-form-infinitif').innerText = v.infinitif;
+
+        const input = document.getElementById('imp-form-input');
+        input.value = '';
+        input.disabled = false;
+        document.getElementById('btn-valider-impform').style.display = 'inline-block';
+
+        if (cfg.mode === 'form-terminaison') {
+            document.getElementById('imp-form-sujet').innerText = sujetAff + ' ' + radical + '-';
+            input.placeholder = '…';
+            input.style.width = '100px';
+            input.style.fontSize = '28px';
+            input.style.textAlign = 'center';
+            zone.dataset.modeTerminaison = '1';
+        } else {
+            document.getElementById('imp-form-sujet').innerText = sujetAff;
+            input.placeholder = 'conjugue…';
+            input.style.width = '220px';
+            input.style.fontSize = '22px';
+            input.style.textAlign = 'left';
+            zone.dataset.modeTerminaison = '0';
+        }
+        parler(v.infinitif);
+        setTimeout(() => input.focus(), 100);
+    }
+}
+
+function validerFutPelote(termChoisie, bonneTerminaison, sujetAff, radical, v) {
+    const msg = document.getElementById('msg-zone');
+    const formeComplete = sujetAff + ' ' + radical + bonneTerminaison;
+
+    if (termChoisie === bonneTerminaison) {
+        msg.style.color = '#2ecc71';
+        msg.innerText = '✅ Bravo !';
+        scoreSerie++; scoreTotal++;
+        document.getElementById('total-score').innerText = scoreTotal;
+        document.querySelectorAll('#imp-pelotes-zone .pelote-terminaison').forEach(b => {
+            b.disabled = true;
+            if (b.innerText.replace(/-/g,'') === bonneTerminaison) b.classList.add('correct');
+        });
+        document.getElementById('imp-pelotes-sujet').innerHTML = `<span style="color:#6c3483; font-weight:bold;">${formeComplete}</span>`;
+        parler(formeComplete);
+        setTimeout(prochain, 1800);
+    } else {
+        futEssaiCount++;
+        document.querySelectorAll('#imp-pelotes-zone .pelote-terminaison').forEach(b => {
+            if (b.innerText.replace(/-/g,'') === termChoisie) b.classList.add('wrong');
+            b.disabled = true;
+        });
+        if (futEssaiCount === 1) {
+            msg.style.color = '#e74c3c';
+            msg.innerText = '❌ Essaie encore…';
+            setTimeout(() => {
+                document.querySelectorAll('#imp-pelotes-zone .pelote-terminaison').forEach(b => {
+                    if (!b.classList.contains('wrong')) b.disabled = false;
+                });
+            }, 800);
+        } else {
+            msg.style.color = '#e74c3c';
+            msg.innerText = `❌ C'était : ${formeComplete}`;
+            document.querySelectorAll('#imp-pelotes-zone .pelote-terminaison').forEach(b => {
+                if (b.innerText.replace(/-/g,'') === bonneTerminaison) b.classList.add('correct');
+            });
+            parler(formeComplete);
+            setTimeout(prochain, 2500);
+        }
+    }
+}
+
+function validerFutForm() {
+    const zone   = document.getElementById('zone-imparfait-form');
+    const sujet  = zone.dataset.sujet;
+    const modeT  = zone.dataset.modeTerminaison === '1';
+    const v      = verbesPioches[qIndex];
+    const input  = document.getElementById('imp-form-input');
+    const reponse = input.value.trim().toLowerCase();
+    const msg    = document.getElementById('msg-zone');
+
+    const radical    = zone.dataset.radical  || getRadicalFut(v, sujet);
+    const sujetAff   = zone.dataset.sujetAff || adapterSujet(sujet, radical, v ? v.hAspire : false);
+    const bonneTerminaison = (jeuActuel === 'conditionnel')
+        ? getTerminaisonCond(sujet)
+        : getTerminaisonFut(sujet);
+    const formeCorrecte = modeT ? bonneTerminaison : radical + bonneTerminaison;
+    const formesAlt = (v ? v.radicalFutAlt || [] : []).map(r => modeT ? bonneTerminaison : r + bonneTerminaison);
+    const formeComplete = sujetAff + ' ' + radical + bonneTerminaison;
+
+    if (reponse === formeCorrecte || formesAlt.includes(reponse)) {
+        if (futFormLocked) return;
+        futFormLocked = true;
+        msg.style.color = '#2ecc71';
+        msg.innerText = '✅ Bravo !';
+        scoreSerie++; scoreTotal++;
+        document.getElementById('total-score').innerText = scoreTotal;
+        input.disabled = true;
+        document.getElementById('btn-valider-impform').style.display = 'none';
+        document.getElementById('imp-form-sujet').innerHTML = `<span style="color:#6c3483; font-weight:bold; font-size:1.2em;">${formeComplete}</span>`;
+        document.getElementById('imp-form-input').style.display = 'none';
+        parler(formeComplete);
+        setTimeout(() => {
+            input.value = '';
+            input.disabled = false;
+            input.style.display = 'inline-block';
+            document.getElementById('btn-valider-impform').style.display = 'inline-block';
+            futFormLocked = false;
+            prochain();
+        }, 2000);
+    } else {
+        futEssaiCount++;
+        if (futEssaiCount === 1) {
+            msg.style.color = '#e74c3c';
+            msg.innerText = '❌ Essaie encore…';
+            input.value = '';
+            input.focus();
+        } else {
+            document.getElementById('zone-imparfait-form').style.display = 'none';
+            msg.style.color = '#e74c3c';
+            msg.innerHTML = `❌ C'était : <span style="font-weight:bold;">${formeComplete}</span>`;
+            input.disabled = true;
+            document.getElementById('btn-valider-impform').style.display = 'none';
+            parler(formeComplete);
+            setTimeout(prochain, 2500);
+        }
+    }
 }
 
 // ============================================================
@@ -1972,7 +2353,10 @@ function validerImpForm() {
 // ============================================================
 
 document.getElementById('imp-form-input').addEventListener('keypress', e => {
-    if (e.key === 'Enter') validerImpForm();
+    if (e.key === 'Enter') {
+        if (jeuActuel === 'futur1' || jeuActuel === 'futur2' || jeuActuel === 'conditionnel') validerFutForm();
+        else validerImpForm();
+    }
 });
 document.getElementById('input-participe').addEventListener('keypress', e => {
     if (e.key === 'Enter') validerParticipe();
@@ -1993,6 +2377,23 @@ document.getElementById('pt-form-input').addEventListener('keypress', e => {
 // ============================================================
 
 function piocher(cfg) {
+
+    if (jeuActuel === 'futur1' || jeuActuel === 'futur2' || jeuActuel === 'conditionnel') {
+        let pool;
+        if (jeuActuel === 'futur1') pool = verbesFutur1;
+        else if (jeuActuel === 'futur2') pool = verbesFutur2;
+        else pool = [...verbesFutur1, ...verbesFutur2];
+        pool = pool.filter(v => cfg.niv.includes(v.niveau));
+        const key = jeuActuel;
+        if (!recentlyPicked[key]) recentlyPicked[key] = [];
+        const seuil = Math.min(30, Math.floor(pool.length * 0.6));
+        let filtered = pool.filter(v => !recentlyPicked[key].includes(v.infinitif));
+        if (filtered.length < cfg.nb) { filtered = pool; recentlyPicked[key] = []; }
+        const picked = melangerTableau([...filtered]).slice(0, cfg.nb);
+        picked.forEach(v => recentlyPicked[key].push(v.infinitif));
+        if (recentlyPicked[key].length > seuil) recentlyPicked[key].splice(0, cfg.nb);
+        return picked;
+    }
 
     if (jeuActuel === 'imparfait1' || jeuActuel === 'imparfait2' || jeuActuel === 'imparfait3') {
         let pool;
@@ -2071,6 +2472,7 @@ function majInterface() {
     else if (jeuActuel === 'present1')    afficherPresent(v);
     else if (jeuActuel === 'present2')    afficherPresent2(v);
     else if (jeuActuel === 'presentTous') afficherPresentTous(v);
+    else if (jeuActuel === 'futur1' || jeuActuel === 'futur2' || jeuActuel === 'conditionnel') afficherFutur(v);
     else if (jeuActuel === 'imparfait1' || jeuActuel === 'imparfait2') afficherImparfait(v);
     else if (jeuActuel === 'imparfait3') afficherImparfait3(v);
 }
@@ -2944,7 +3346,7 @@ function validerPTForm() {
 
 function prochain() {
     qIndex++;
-    if (qIndex < 8) { essai = 0; p2EssaiCount = 0; ptEssaiCount = 0; impEssaiCount = 0; majInterface(); }
+    if (qIndex < 8) { essai = 0; p2EssaiCount = 0; ptEssaiCount = 0; impEssaiCount = 0; futEssaiCount = 0; majInterface(); }
     else finDeSerie();
 }
 
