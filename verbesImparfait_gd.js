@@ -408,12 +408,6 @@ const verbesImparfait1 = [
     radicalImp: "entend-",
   },
   {
-    infinitif: "entreprendre",
-    groupe: 3,
-    niveau: 3,
-    radicalImp: "entrepren-",
-  },
-  {
     infinitif: "entretenir",
     groupe: 3,
     niveau: 3,
@@ -528,12 +522,6 @@ const verbesImparfait1 = [
     groupe: 3,
     niveau: 2,
     radicalImp: "pouv-",
-  },
-  {
-    infinitif: "prendre",
-    groupe: 3,
-    niveau: 1,
-    radicalImp: "pren-",
   },
   {
     infinitif: "prescrire",
@@ -711,12 +699,6 @@ const verbesImparfait1 = [
     radicalImp: "souten-",
   },
   {
-    infinitif: "subvenir",
-    groupe: 3,
-    niveau: 4,
-    radicalImp: "subven-",
-  },
-  {
     infinitif: "suivre",
     groupe: 3,
     niveau: 2,
@@ -727,12 +709,6 @@ const verbesImparfait1 = [
     groupe: 3,
     niveau: 3,
     radicalImp: "surpren-",
-  },
-  {
-    infinitif: "survenir",
-    groupe: 3,
-    niveau: 3,
-    radicalImp: "surven-",
   },
   {
     infinitif: "survivre",
@@ -794,6 +770,18 @@ const verbesImparfait1 = [
     niveau: 2,
     radicalImp: "voul-",
   },
+ {
+    infinitif: "survenir",
+    groupe: 3,
+    niveau: 3,
+    radicalImp: "surven-",
+  },
+ {
+    infinitif: "subvenir",
+    groupe: 3,
+    niveau: 4,
+    radicalImp: "subven-",
+  },
   // --- Verbes en -GUER (u toujours présent, réguliers) ---
   { infinitif: "conjuguer",  groupe: 1, niveau: 1, radicalImp: "conjugu-" },
   { infinitif: "fatiguer",   groupe: 1, niveau: 1, radicalImp: "fatigu-" },
@@ -810,7 +798,19 @@ const verbesImparfait1 = [
 ];
 
 const verbesImparfait2 = [
-  {
+ {
+    infinitif: "prendre",
+    groupe: 3,
+    niveau: 1,
+    radicalImp: "pren-",
+  }, 
+{
+    infinitif: "entreprendre",
+    groupe: 3,
+    niveau: 3,
+    radicalImp: "entrepren-",
+  }, 
+ {
     infinitif: "comprendre",
     groupe: 3,
     niveau: 2,
