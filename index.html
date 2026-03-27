@@ -327,6 +327,7 @@
 <script src="data.js"></script>
 <script src="verbesImparfait_gd.js"></script>
 <script src="dataFuturCondi.js"></script>
+<script src="verbesImparfaitPron.js"></script>
 <script src="dataFuturCondiPron.js"></script>
 <script>
 // ============================================================
@@ -807,8 +808,8 @@ function piocher(cfg) {
 
     if (jeuActuel === 'imparfait1' || jeuActuel === 'imparfait2' || jeuActuel === 'imparfait3') {
         let pool;
-        if (jeuActuel === 'imparfait1') pool = verbesImparfait1;
-        else pool = verbesImparfait2; // imparfait2 et imparfait3 piochent dans verbesImparfait2
+        if (jeuActuel === 'imparfait1') pool = [...verbesImparfait1, ...(verbesImparfaitPron1 || [])];
+        else pool = [...verbesImparfait2, ...(verbesImparfaitPron2 || [])]; // imparfait2 et imparfait3 piochent dans verbesImparfait2
         pool = pool.filter(v => cfg.niv.includes(v.niveau));
         return melangerTableau([...pool]).slice(0, cfg.nb);
     }
@@ -2405,8 +2406,8 @@ function piocher(cfg) {
 
     if (jeuActuel === 'imparfait1' || jeuActuel === 'imparfait2' || jeuActuel === 'imparfait3') {
         let pool;
-        if (jeuActuel === 'imparfait1') pool = verbesImparfait1;
-        else pool = verbesImparfait2; // imparfait2 et imparfait3 piochent dans verbesImparfait2
+        if (jeuActuel === 'imparfait1') pool = [...verbesImparfait1, ...(verbesImparfaitPron1 || [])];
+        else pool = [...verbesImparfait2, ...(verbesImparfaitPron2 || [])]; // imparfait2 et imparfait3 piochent dans verbesImparfait2
         pool = pool.filter(v => cfg.niv.includes(v.niveau));
         return melangerTableau([...pool]).slice(0, cfg.nb);
     }
