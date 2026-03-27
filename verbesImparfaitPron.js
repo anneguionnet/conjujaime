@@ -165,14 +165,6 @@ const verbesImparfaitPron2 = [
   radicalVous: "vous rend-",
 },
 {
-  infinitif: "s'ensuivre",
-  groupe: 3,
-  niveau: 3,
-  pronominal: true,
-  sujetsPossibles: ["il"],
-  radicalIl: "s'ensuiv-",
-},
-{
   infinitif: "s'éprendre",
   groupe: 3,
   niveau: 4,
