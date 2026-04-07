@@ -12,6 +12,10 @@
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z79SK6G80K"></script>
     <script>
+
+// Sécurité : variables pronominales imparfait (si fichier absent)
+if (typeof verbesImparfaitPron1 === 'undefined') var verbesImparfaitPron1 = [];
+if (typeof verbesImparfaitPron2 === 'undefined') var verbesImparfaitPron2 = [];
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
@@ -32,7 +36,7 @@
         <div class="menu-sous-titre">L'univers de Juju 🐾</div>
     </div>
 
-    <img src="purpleJuju.jpg" alt="Juju le chat" class="juju-menu">
+    <img src="mainbodyJuju.png" alt="Juju le chat" class="juju-menu">
 
     <!-- INFINITIF -->
     <div class="menu-section">
@@ -58,6 +62,7 @@
         <button class="btn-menu-jeu bleu2" onclick="lancerJeu('present2')">
             🟠 2e et 3e groupe
         </button>
+        <p class="menu-encouragement">Jongle avec toutes les combinaisons possibles du présent !</p>
         <button class="btn-menu-jeu bleu3" onclick="lancerJeu('presentTous')">
             🟣 Tous les groupes
         </button>
@@ -117,7 +122,7 @@
             <small id="titre-jeu" style="color:#724a91; font-size:16px; font-weight:bold;"></small>
         </div>
 
-        <img src="purpleJuju.jpg" alt="Juju" class="juju-jeu" onclick="clicJuju()">
+        <img src="purpleJuju.jpg" alt="Juju" class="juju-jeu" id="juju-jeu" onclick="clicJuju()">
 
         <!-- Verbe affiché (jeux infinitif) -->
         <div class="verbe-display" id="verbe-txt"></div>
@@ -619,6 +624,8 @@ function chargerSerie() {
     essai         = 0;
     p2EssaiCount  = 0;
     ptEssaiCount  = 0;
+    impEssaiCount = 0;
+    futEssaiCount = 0;
 
     const cfg = getConfig();
 
@@ -981,6 +988,7 @@ function afficherPresentPelotes(v) {
     zone.dataset.sujet       = sujet;
     zone.dataset.radical     = radicalNet;
     zone.dataset.terminaison = terminaison;
+    zone.dataset.essai       = '0';
 
     document.getElementById('present-infinitif').innerText = v.infinitif;
     document.getElementById('present-conjugaison').innerText = `${sujet} ${radicalNet}-`;
@@ -1224,7 +1232,8 @@ function verifierGroupe(choix) {
         setTimeout(prochain, 1000);
     } else {
         msg.style.color = COULEURS_GR[v.gr];
-        msg.innerText   = `Indice : ${v.part}` + (v.gr === 2 ? ' (-issant)' : '');
+        msg.innerText   = `Indice : ${v.part}` + (v.gr === 2 ? ' (-issant)' : ''); setTimeout(fuzzJuju, 0);
+        setTimeout(fuzzJuju, 0);
     }
 }
 
@@ -1252,9 +1261,13 @@ function validerParticipe() {
         const pelote = document.createElement('div');
         pelote.style.cssText = `width:55px;height:55px;border-radius:50%;background:${COULEURS_GR[v.gr]};margin:8px auto;`;
         indice.appendChild(pelote);
+        inp.value = '';
+        inp.disabled = false;
+        inp.focus();
+        setTimeout(fuzzJuju, 0);
     } else {
         msg.style.color = '#e74c3c';
-        msg.innerText   = `La réponse : ${v.part}`;
+        msg.innerText   = `La réponse : ${v.part}`; setTimeout(fuzzJuju, 0);
         parler(v.infi);
         inp.disabled = true;
         setTimeout(prochain, 2500);
@@ -1277,15 +1290,28 @@ function verifierTerminaison(term, btn, zone) {
         scoreTotal++; scoreSerie++;
         document.getElementById('total-score').innerText = scoreTotal;
         creerConfettis();
-    } else {
+        setTimeout(prochain, 2000);
+    } else if (zone.dataset.essai !== '1') {
+        // 1er essai raté : indice visuel, on réactive les pelotes restantes
+        zone.dataset.essai = '1';
         btn.classList.add('wrong');
         msg.style.color = '#e74c3c';
-        msg.innerText   = '✗ Regarde bien le sujet';
+        msg.innerText   = '✗ Essaie encore !'; setTimeout(fuzzJuju, 0);
+        setTimeout(() => {
+            document.querySelectorAll('.pelote-terminaison').forEach(b => {
+                if (!b.classList.contains('wrong')) b.disabled = false;
+            });
+        }, 600);
+    } else {
+        // 2e essai raté : réponse donnée
+        btn.classList.add('wrong');
+        msg.style.color = '#e74c3c';
+        msg.innerText   = '✗ Regarde bien le sujet'; setTimeout(fuzzJuju, 0);
         document.querySelectorAll('.pelote-terminaison').forEach(b => {
             if (b.textContent === '-' + bonne) b.classList.add('correct');
         });
+        setTimeout(prochain, 2000);
     }
-    setTimeout(prochain, 2000);
 }
 
 function afficherFormeComplete(sujetEl, inputEl, btnEl, formeComplete) {
@@ -1351,12 +1377,12 @@ function validerForm() {
             const affichageReponse = bonneAlt
                 ? `${sujet} ${bonne} (ou ${bonneAlt})`
                 : `${sujet} ${bonne}`;
-            msg.innerText = `✗ La réponse : ${affichageReponse}`;
+            msg.innerText = `✗ La réponse : ${affichageReponse}`; setTimeout(fuzzJuju, 0);
             parler(sujet + ' ' + bonne);
             setTimeout(() => { inp.disabled = false; btnV.disabled = false; prochain(); }, 2500);
         } else {
             msg.style.color = '#e74c3c';
-            msg.innerText   = '✗ Essaie encore !';
+            msg.innerText   = '✗ Essaie encore !'; setTimeout(fuzzJuju, 0);
             inp.value = '';
             inp.focus();
         }
@@ -1389,7 +1415,7 @@ function verifierP2Pelote(p, btn, zone) {
         btn.classList.add('wrong');
         if (p2EssaiCount >= 2) {
             msg.style.color = '#e74c3c';
-            msg.innerText   = `✗ La réponse : ${sujet} ${radical}${terminaison}`;
+            msg.innerText   = `✗ La réponse : ${sujet} ${radical}${terminaison}`; setTimeout(fuzzJuju, 0);
             document.getElementById('p2-conjugaison').innerText = `${sujet} ${radical}${terminaison}`;
             document.querySelectorAll('#p2-pelotes .pelote-terminaison').forEach(b => {
                 if (b.dataset.correct === '1') b.classList.add('correct-p2');
@@ -1398,7 +1424,7 @@ function verifierP2Pelote(p, btn, zone) {
             setTimeout(prochain, 3000);
         } else {
             msg.style.color = '#e74c3c';
-            msg.innerText   = '✗ Essaie encore !';
+            msg.innerText   = '✗ Essaie encore !'; setTimeout(fuzzJuju, 0);
             document.querySelectorAll('#p2-pelotes .pelote-terminaison').forEach(b => {
                 if (!b.classList.contains('wrong')) b.disabled = false;
             });
@@ -1447,12 +1473,12 @@ function validerP2Form() {
             inp.disabled  = true;
             btnV.disabled = true;
             msg.style.color = '#e74c3c';
-            msg.innerText   = `✗ La réponse : ${sujet} ${bonne}`;
+            msg.innerText   = `✗ La réponse : ${sujet} ${bonne}`; setTimeout(fuzzJuju, 0);
             parler(sujet + ' ' + bonne);
             setTimeout(() => { inp.disabled = false; btnV.disabled = false; prochain(); }, 2500);
         } else {
             msg.style.color = '#e74c3c';
-            msg.innerText   = '✗ Essaie encore !';
+            msg.innerText   = '✗ Essaie encore !'; setTimeout(fuzzJuju, 0);
             inp.value = '';
             inp.focus();
         }
@@ -1613,6 +1639,7 @@ function afficherPresentTousPelotes(v) {
     zone.dataset.sujet       = sujet;
     zone.dataset.radical     = radicalNet;
     zone.dataset.terminaison = terminaison;
+    zone.dataset.essai       = '0';
 
     document.getElementById('pt-infinitif').innerText   = v.infinitif;
     document.getElementById('pt-conjugaison').innerText = `${sujet} ${radicalNet}-`;
@@ -1701,7 +1728,7 @@ function verifierPTPelote(p, btn, zone) {
         btn.classList.add('wrong');
         if (ptEssaiCount >= 2) {
             msg.style.color = '#e74c3c';
-            msg.innerText   = `✗ La réponse : ${sujet} ${radical}${terminaison}`;
+            msg.innerText   = `✗ La réponse : ${sujet} ${radical}${terminaison}`; setTimeout(fuzzJuju, 0);
             document.getElementById('pt-conjugaison').innerText = `${sujet} ${radical}${terminaison}`;
             document.querySelectorAll('#pt-pelotes .pelote-terminaison').forEach(b => {
                 if (b.dataset.correct === '1') b.classList.add('correct-p2');
@@ -1710,7 +1737,7 @@ function verifierPTPelote(p, btn, zone) {
             setTimeout(prochain, 3000);
         } else {
             msg.style.color = '#e74c3c';
-            msg.innerText   = '✗ Essaie encore !';
+            msg.innerText   = '✗ Essaie encore !'; setTimeout(fuzzJuju, 0);
             document.querySelectorAll('#pt-pelotes .pelote-terminaison').forEach(b => {
                 if (!b.classList.contains('wrong')) b.disabled = false;
             });
@@ -1761,12 +1788,12 @@ function validerPTForm() {
             btnV.disabled = true;
             msg.style.color = '#e74c3c';
             const affichage = bonneAlt ? `${sujet} ${bonne} (ou ${bonneAlt})` : `${sujet} ${bonne}`;
-            msg.innerText = `✗ La réponse : ${affichage}`;
+            msg.innerText = `✗ La réponse : ${affichage}`; setTimeout(fuzzJuju, 0);
             parler(sujet + ' ' + bonne);
             setTimeout(() => { inp.disabled = false; btnV.disabled = false; prochain(); }, 2500);
         } else {
             msg.style.color = '#e74c3c';
-            msg.innerText   = '✗ Essaie encore !';
+            msg.innerText   = '✗ Essaie encore !'; setTimeout(fuzzJuju, 0);
             inp.value = '';
             inp.focus();
         }
@@ -1846,6 +1873,13 @@ function rejouerSerie() {
 // ============================================================
 // DEBUG
 // ============================================================
+
+function fuzzJuju() {
+    const img = document.getElementById('juju-jeu');
+    if (!img) return;
+    img.src = 'fuzzedJuju.png';
+    setTimeout(() => { img.src = 'purpleJuju.jpg'; }, 1500);
+}
 
 function clicJuju() {
     clicksJuju++;
@@ -2101,7 +2135,7 @@ function validerFutPelote(termChoisie, bonneTerminaison, sujetAff, radical, v) {
         });
         if (futEssaiCount === 1) {
             msg.style.color = '#e74c3c';
-            msg.innerText = '❌ Essaie encore…';
+            msg.innerText = '❌ Essaie encore…'; setTimeout(fuzzJuju, 0);
             setTimeout(() => {
                 document.querySelectorAll('#imp-pelotes-zone .pelote-terminaison').forEach(b => {
                     if (!b.classList.contains('wrong')) b.disabled = false;
@@ -2109,7 +2143,7 @@ function validerFutPelote(termChoisie, bonneTerminaison, sujetAff, radical, v) {
             }, 800);
         } else {
             msg.style.color = '#e74c3c';
-            msg.innerText = `❌ C'était : ${formeComplete}`;
+            msg.innerText = `❌ C'était : ${formeComplete}`; setTimeout(fuzzJuju, 0);
             document.querySelectorAll('#imp-pelotes-zone .pelote-terminaison').forEach(b => {
                 if (b.innerText.replace(/-/g,'') === bonneTerminaison) b.classList.add('correct');
             });
@@ -2161,13 +2195,13 @@ function validerFutForm() {
         futEssaiCount++;
         if (futEssaiCount === 1) {
             msg.style.color = '#e74c3c';
-            msg.innerText = '❌ Essaie encore…';
+            msg.innerText = '❌ Essaie encore…'; setTimeout(fuzzJuju, 0);
             input.value = '';
             input.focus();
         } else {
             document.getElementById('zone-imparfait-form').style.display = 'none';
             msg.style.color = '#e74c3c';
-            msg.innerHTML = `❌ C'était : <span style="font-weight:bold;">${formeComplete}</span>`;
+            msg.innerHTML = `❌ C'était : <span style="font-weight:bold;">${formeComplete}</span>`; setTimeout(fuzzJuju, 0);
             input.disabled = true;
             document.getElementById('btn-valider-impform').style.display = 'none';
             parler(formeComplete);
@@ -2290,7 +2324,7 @@ function validerImpPelote(termChoisie, bonneTerminaison, sujetAff, radicalNet, v
         });
         if (impEssaiCount === 1) {
             msg.style.color = '#e74c3c';
-            msg.innerText = '❌ Essaie encore…';
+            msg.innerText = '❌ Essaie encore…'; setTimeout(fuzzJuju, 0);
             // Réactiver les pelotes restantes après 800ms
             setTimeout(() => {
                 document.querySelectorAll('#imp-pelotes-zone .pelote-terminaison').forEach(b => {
@@ -2299,7 +2333,7 @@ function validerImpPelote(termChoisie, bonneTerminaison, sujetAff, radicalNet, v
             }, 800);
         } else {
             msg.style.color = '#e74c3c';
-            msg.innerText = `❌ C'était : ${formeComplete}`;
+            msg.innerText = `❌ C'était : ${formeComplete}`; setTimeout(fuzzJuju, 0);
             document.querySelectorAll('#imp-pelotes-zone .pelote-terminaison').forEach(b => {
                 if (b.innerText.replace(/-/g,'') === bonneTerminaison) b.classList.add('correct');
             });
@@ -2357,13 +2391,13 @@ function validerImpForm() {
         impEssaiCount++;
         if (impEssaiCount === 1) {
             msg.style.color = '#e74c3c';
-            msg.innerText = '❌ Essaie encore…';
+            msg.innerText = '❌ Essaie encore…'; setTimeout(fuzzJuju, 0);
             input.value = '';
             input.focus();
         } else {
             document.getElementById('zone-imparfait-form').style.display = 'none';
             msg.style.color = '#e74c3c';
-            msg.innerHTML = `❌ C'était : <span style="font-weight:bold;">${formeComplete}</span>`;
+            msg.innerHTML = `❌ C'était : <span style="font-weight:bold;">${formeComplete}</span>`; setTimeout(fuzzJuju, 0);
             input.disabled = true;
             document.getElementById('btn-valider-impform').style.display = 'none';
             parler(formeComplete);
@@ -2495,6 +2529,8 @@ function majInterface() {
     document.getElementById('verbe-txt').innerText = '';
     p2EssaiCount = 0;
     ptEssaiCount = 0;
+    impEssaiCount = 0;
+    futEssaiCount = 0;
 
     if      (jeuActuel === 'infinitif')   afficherInfinitif(v);
     else if (jeuActuel === 'conjugue')    afficherConjugue(v);
@@ -2576,6 +2612,7 @@ function afficherPresentPelotes(v) {
     zone.dataset.sujet       = sujet;
     zone.dataset.radical     = radicalNet;
     zone.dataset.terminaison = terminaison;
+    zone.dataset.essai       = '0';
 
     document.getElementById('present-infinitif').innerText = v.infinitif;
     document.getElementById('present-conjugaison').innerText = `${sujet} ${radicalNet}-`;
@@ -2819,7 +2856,8 @@ function verifierGroupe(choix) {
         setTimeout(prochain, 1000);
     } else {
         msg.style.color = COULEURS_GR[v.gr];
-        msg.innerText   = `Indice : ${v.part}` + (v.gr === 2 ? ' (-issant)' : '');
+        msg.innerText   = `Indice : ${v.part}` + (v.gr === 2 ? ' (-issant)' : ''); setTimeout(fuzzJuju, 0);
+        setTimeout(fuzzJuju, 0);
     }
 }
 
@@ -2847,9 +2885,13 @@ function validerParticipe() {
         const pelote = document.createElement('div');
         pelote.style.cssText = `width:55px;height:55px;border-radius:50%;background:${COULEURS_GR[v.gr]};margin:8px auto;`;
         indice.appendChild(pelote);
+        inp.value = '';
+        inp.disabled = false;
+        inp.focus();
+        setTimeout(fuzzJuju, 0);
     } else {
         msg.style.color = '#e74c3c';
-        msg.innerText   = `La réponse : ${v.part}`;
+        msg.innerText   = `La réponse : ${v.part}`; setTimeout(fuzzJuju, 0);
         parler(v.infi);
         inp.disabled = true;
         setTimeout(prochain, 2500);
@@ -2872,15 +2914,28 @@ function verifierTerminaison(term, btn, zone) {
         scoreTotal++; scoreSerie++;
         document.getElementById('total-score').innerText = scoreTotal;
         creerConfettis();
-    } else {
+        setTimeout(prochain, 2000);
+    } else if (zone.dataset.essai !== '1') {
+        // 1er essai raté : indice visuel, on réactive les pelotes restantes
+        zone.dataset.essai = '1';
         btn.classList.add('wrong');
         msg.style.color = '#e74c3c';
-        msg.innerText   = '✗ Regarde bien le sujet';
+        msg.innerText   = '✗ Essaie encore !'; setTimeout(fuzzJuju, 0);
+        setTimeout(() => {
+            document.querySelectorAll('.pelote-terminaison').forEach(b => {
+                if (!b.classList.contains('wrong')) b.disabled = false;
+            });
+        }, 600);
+    } else {
+        // 2e essai raté : réponse donnée
+        btn.classList.add('wrong');
+        msg.style.color = '#e74c3c';
+        msg.innerText   = '✗ Regarde bien le sujet'; setTimeout(fuzzJuju, 0);
         document.querySelectorAll('.pelote-terminaison').forEach(b => {
             if (b.textContent === '-' + bonne) b.classList.add('correct');
         });
+        setTimeout(prochain, 2000);
     }
-    setTimeout(prochain, 2000);
 }
 
 function afficherFormeComplete(sujetEl, inputEl, btnEl, formeComplete) {
@@ -2946,12 +3001,12 @@ function validerForm() {
             const affichageReponse = bonneAlt
                 ? `${sujet} ${bonne} (ou ${bonneAlt})`
                 : `${sujet} ${bonne}`;
-            msg.innerText = `✗ La réponse : ${affichageReponse}`;
+            msg.innerText = `✗ La réponse : ${affichageReponse}`; setTimeout(fuzzJuju, 0);
             parler(sujet + ' ' + bonne);
             setTimeout(() => { inp.disabled = false; btnV.disabled = false; prochain(); }, 2500);
         } else {
             msg.style.color = '#e74c3c';
-            msg.innerText   = '✗ Essaie encore !';
+            msg.innerText   = '✗ Essaie encore !'; setTimeout(fuzzJuju, 0);
             inp.value = '';
             inp.focus();
         }
@@ -2984,7 +3039,7 @@ function verifierP2Pelote(p, btn, zone) {
         btn.classList.add('wrong');
         if (p2EssaiCount >= 2) {
             msg.style.color = '#e74c3c';
-            msg.innerText   = `✗ La réponse : ${sujet} ${radical}${terminaison}`;
+            msg.innerText   = `✗ La réponse : ${sujet} ${radical}${terminaison}`; setTimeout(fuzzJuju, 0);
             document.getElementById('p2-conjugaison').innerText = `${sujet} ${radical}${terminaison}`;
             document.querySelectorAll('#p2-pelotes .pelote-terminaison').forEach(b => {
                 if (b.dataset.correct === '1') b.classList.add('correct-p2');
@@ -2993,7 +3048,7 @@ function verifierP2Pelote(p, btn, zone) {
             setTimeout(prochain, 3000);
         } else {
             msg.style.color = '#e74c3c';
-            msg.innerText   = '✗ Essaie encore !';
+            msg.innerText   = '✗ Essaie encore !'; setTimeout(fuzzJuju, 0);
             document.querySelectorAll('#p2-pelotes .pelote-terminaison').forEach(b => {
                 if (!b.classList.contains('wrong')) b.disabled = false;
             });
@@ -3042,12 +3097,12 @@ function validerP2Form() {
             inp.disabled  = true;
             btnV.disabled = true;
             msg.style.color = '#e74c3c';
-            msg.innerText   = `✗ La réponse : ${sujet} ${bonne}`;
+            msg.innerText   = `✗ La réponse : ${sujet} ${bonne}`; setTimeout(fuzzJuju, 0);
             parler(sujet + ' ' + bonne);
             setTimeout(() => { inp.disabled = false; btnV.disabled = false; prochain(); }, 2500);
         } else {
             msg.style.color = '#e74c3c';
-            msg.innerText   = '✗ Essaie encore !';
+            msg.innerText   = '✗ Essaie encore !'; setTimeout(fuzzJuju, 0);
             inp.value = '';
             inp.focus();
         }
@@ -3210,6 +3265,7 @@ function afficherPresentTousPelotes(v) {
     zone.dataset.sujet       = sujet;
     zone.dataset.radical     = radicalNet;
     zone.dataset.terminaison = terminaison;
+    zone.dataset.essai       = '0';
 
     document.getElementById('pt-infinitif').innerText   = v.infinitif;
     document.getElementById('pt-conjugaison').innerText = `${sujet} ${radicalNet}-`;
@@ -3298,7 +3354,7 @@ function verifierPTPelote(p, btn, zone) {
         btn.classList.add('wrong');
         if (ptEssaiCount >= 2) {
             msg.style.color = '#e74c3c';
-            msg.innerText   = `✗ La réponse : ${sujet} ${radical}${terminaison}`;
+            msg.innerText   = `✗ La réponse : ${sujet} ${radical}${terminaison}`; setTimeout(fuzzJuju, 0);
             document.getElementById('pt-conjugaison').innerText = `${sujet} ${radical}${terminaison}`;
             document.querySelectorAll('#pt-pelotes .pelote-terminaison').forEach(b => {
                 if (b.dataset.correct === '1') b.classList.add('correct-p2');
@@ -3307,7 +3363,7 @@ function verifierPTPelote(p, btn, zone) {
             setTimeout(prochain, 3000);
         } else {
             msg.style.color = '#e74c3c';
-            msg.innerText   = '✗ Essaie encore !';
+            msg.innerText   = '✗ Essaie encore !'; setTimeout(fuzzJuju, 0);
             document.querySelectorAll('#pt-pelotes .pelote-terminaison').forEach(b => {
                 if (!b.classList.contains('wrong')) b.disabled = false;
             });
@@ -3358,12 +3414,12 @@ function validerPTForm() {
             btnV.disabled = true;
             msg.style.color = '#e74c3c';
             const affichage = bonneAlt ? `${sujet} ${bonne} (ou ${bonneAlt})` : `${sujet} ${bonne}`;
-            msg.innerText = `✗ La réponse : ${affichage}`;
+            msg.innerText = `✗ La réponse : ${affichage}`; setTimeout(fuzzJuju, 0);
             parler(sujet + ' ' + bonne);
             setTimeout(() => { inp.disabled = false; btnV.disabled = false; prochain(); }, 2500);
         } else {
             msg.style.color = '#e74c3c';
-            msg.innerText   = '✗ Essaie encore !';
+            msg.innerText   = '✗ Essaie encore !'; setTimeout(fuzzJuju, 0);
             inp.value = '';
             inp.focus();
         }
