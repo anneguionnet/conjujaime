@@ -14,14 +14,13 @@
     <script>
 
 // Sécurité : variables pronominales imparfait (si fichier absent)
-if (typeof verbesImparfaitPron1 === 'undefined') var verbesImparfaitPron1 = [];
-if (typeof verbesImparfaitPron2 === 'undefined') var verbesImparfaitPron2 = [];
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-Z79SK6G80K');
     </script>
     <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -134,8 +133,9 @@ if (typeof verbesImparfaitPron2 === 'undefined') var verbesImparfaitPron2 = [];
         <div class="input-zone" id="input-zone" style="display:none;">
             <input type="text" id="input-participe" class="input-reponse"
                    placeholder="Tape le participe…"
-                   autocomplete="off" autocorrect="off" spellcheck="false">
-            <button class="btn-valider" onclick="validerParticipe()">OK</button>
+                   autocomplete="off" autocorrect="off" spellcheck="false"
+                   onkeydown="if(event.key==='Enter'){const b=document.getElementById('btn-ok-participe'); if(b&&!b.disabled) validerParticipe();}">
+            <button class="btn-valider" id="btn-ok-participe" onclick="validerParticipe()">OK</button>
         </div>
 
         <!-- Pelote indice (jeu 3) -->
@@ -434,6 +434,7 @@ let scoreSerie  = 0;
 let verbesPioches = [];
 let dejaVus     = new Set();
 let essai       = 0;
+let partTries   = 0;
 let dernierOrdrePelotes = [1, 2, 3];
 let clicksJuju  = 0;
 let p2EssaiCount = 0; // compteur d'erreurs pour present2
@@ -960,8 +961,10 @@ function afficherParticipe(v) {
     const inp = document.getElementById('input-participe');
     inp.value = '';
     inp.disabled = false;
+    partTries = 0;
     inp.focus();
     essai = 0;
+    document.getElementById('pelote-indice-zone').innerHTML = '';
     parler(texte);
 }
 
@@ -1233,7 +1236,6 @@ function verifierGroupe(choix) {
     } else {
         msg.style.color = COULEURS_GR[v.gr];
         msg.innerText   = `Indice : ${v.part}` + (v.gr === 2 ? ' (-issant)' : ''); setTimeout(fuzzJuju, 0);
-        setTimeout(fuzzJuju, 0);
     }
 }
 
@@ -1241,11 +1243,9 @@ function validerParticipe() {
     const v       = verbesPioches[qIndex];
     const inp     = document.getElementById('input-participe');
     const reponse = inp.value.trim().toLowerCase();
-    const correct = v.part.toLowerCase();
+    const correct = v.part ? v.part.toLowerCase() : '';
     const msg     = document.getElementById('msg-zone');
     const indice  = document.getElementById('pelote-indice-zone');
-
-    essai++;
 
     if (reponse === correct) {
         msg.style.color = '#2ecc71';
@@ -1255,20 +1255,29 @@ function validerParticipe() {
         parler(v.part);
         creerConfettis();
         inp.disabled = true;
+        partTries = 0;
         setTimeout(prochain, 2000);
-    } else if (essai === 1) {
-        msg.innerText = '';
-        const pelote = document.createElement('div');
-        pelote.style.cssText = `width:55px;height:55px;border-radius:50%;background:${COULEURS_GR[v.gr]};margin:8px auto;`;
-        indice.appendChild(pelote);
-        inp.value = '';
-        inp.disabled = false;
-        inp.focus();
+    } else if (partTries < 1) {
+        partTries = 1;
+        indice.innerHTML = '';
+        msg.style.color = COULEURS_GR[v.gr];
+        msg.innerText   = `Indice : ${v.part}` + (v.gr === 2 ? ' (-issant)' : '');
         setTimeout(fuzzJuju, 0);
+        const btnOK = document.getElementById('btn-ok-participe');
+        if (btnOK) btnOK.disabled = true;
+        inp.value = '';
+        inp.disabled = true;
+        setTimeout(() => {
+            inp.disabled = false;
+            if (btnOK) btnOK.disabled = false;
+            inp.focus();
+        }, 800);
     } else {
+        partTries = 0;
+        indice.innerHTML = '';
         msg.style.color = '#e74c3c';
         msg.innerText   = `La réponse : ${v.part}`; setTimeout(fuzzJuju, 0);
-        parler(v.infi);
+        parler(v.part);
         inp.disabled = true;
         setTimeout(prochain, 2500);
     }
@@ -2584,8 +2593,10 @@ function afficherParticipe(v) {
     const inp = document.getElementById('input-participe');
     inp.value = '';
     inp.disabled = false;
+    partTries = 0;
     inp.focus();
     essai = 0;
+    document.getElementById('pelote-indice-zone').innerHTML = '';
     parler(texte);
 }
 
@@ -2857,7 +2868,6 @@ function verifierGroupe(choix) {
     } else {
         msg.style.color = COULEURS_GR[v.gr];
         msg.innerText   = `Indice : ${v.part}` + (v.gr === 2 ? ' (-issant)' : ''); setTimeout(fuzzJuju, 0);
-        setTimeout(fuzzJuju, 0);
     }
 }
 
@@ -2865,11 +2875,9 @@ function validerParticipe() {
     const v       = verbesPioches[qIndex];
     const inp     = document.getElementById('input-participe');
     const reponse = inp.value.trim().toLowerCase();
-    const correct = v.part.toLowerCase();
+    const correct = v.part ? v.part.toLowerCase() : '';
     const msg     = document.getElementById('msg-zone');
     const indice  = document.getElementById('pelote-indice-zone');
-
-    essai++;
 
     if (reponse === correct) {
         msg.style.color = '#2ecc71';
@@ -2879,20 +2887,29 @@ function validerParticipe() {
         parler(v.part);
         creerConfettis();
         inp.disabled = true;
+        partTries = 0;
         setTimeout(prochain, 2000);
-    } else if (essai === 1) {
-        msg.innerText = '';
-        const pelote = document.createElement('div');
-        pelote.style.cssText = `width:55px;height:55px;border-radius:50%;background:${COULEURS_GR[v.gr]};margin:8px auto;`;
-        indice.appendChild(pelote);
-        inp.value = '';
-        inp.disabled = false;
-        inp.focus();
+    } else if (partTries < 1) {
+        partTries = 1;
+        indice.innerHTML = '';
+        msg.style.color = COULEURS_GR[v.gr];
+        msg.innerText   = `Indice : ${v.part}` + (v.gr === 2 ? ' (-issant)' : '');
         setTimeout(fuzzJuju, 0);
+        const btnOK = document.getElementById('btn-ok-participe');
+        if (btnOK) btnOK.disabled = true;
+        inp.value = '';
+        inp.disabled = true;
+        setTimeout(() => {
+            inp.disabled = false;
+            if (btnOK) btnOK.disabled = false;
+            inp.focus();
+        }, 800);
     } else {
+        partTries = 0;
+        indice.innerHTML = '';
         msg.style.color = '#e74c3c';
         msg.innerText   = `La réponse : ${v.part}`; setTimeout(fuzzJuju, 0);
-        parler(v.infi);
+        parler(v.part);
         inp.disabled = true;
         setTimeout(prochain, 2500);
     }
