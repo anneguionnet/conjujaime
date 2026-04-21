@@ -820,7 +820,7 @@ const verbesPresent = [
           radicalPluriel: "durciss-",
         },
         {
-          infinitif: "élargit",
+          infinitif: "élargir",
           groupe: 2,
           niveau: 2,
           radical: "élargi-",
@@ -1114,10 +1114,10 @@ const verbesPresent = [
           radicalPluriel: "compatiss-",
         },
         {
-          infinitif: "déperir",
+          infinitif: "dépérir",
           groupe: 2,
           niveau: 4,
-          radical: "déperi-",
+          radical: "dépéri-",
           radicalPluriel: "dépériss-",
         },
         {
